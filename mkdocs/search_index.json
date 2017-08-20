@@ -17,8 +17,43 @@
         }, 
         {
             "location": "/install/prereqs/", 
-            "text": "", 
+            "text": "Required\n\n\nLinux\n\n\nWe currently run our agents on Ubuntu Xenial (16.04.2) with kernel 4.9.34 with\npatches for EFS. Until Titus open source supports EFS, it is likely that Xenial\nand a 4.9 kernel is sufficient.\n\n\nWe run all other tiers of Titus on Trusty.\n\n\nMesos and Zookeeper\n\n\n\n\nZookeeper 3.4.8 (with Exhibitor 1.5.5)\n\n\nMesos 1.0.1\n\n\n\n\nSpinnaker\n\n\nWe deploy Titus via Spinnaker to an EC2 cloud provider. Eventually we may\nrelease these pipelines, but for now we suggest direct deployments using\nthe AWS EC2 console.\n\n\nDocker Registry\n\n\nWe operate a docker registry based on Docker Distribution. We have tested with\nDockerhub and suggest this or the EC2 Container Registry Service (ECR).\n\n\nAWS Configuration\n\n\n\n\nIAM Role and security group for Titus\n\n\nTODO: specify what is required, for now tested with wide open security group\n  and \n*\n IAM role. \n\n\nIAM Role and security group for app container\n\n\nTODO: Need to specify a test sec group and IAM role\n\n\n\n\nOptional\n\n\nWe use Cassandra as our persistence store for Titus master. For OSS, we\ncurrent suggest the in-memory store.\n\n\nWe have integration with Eureka to disable agents and monitor health. For now,\nthis is not part of the OSS implementation.\n\n\nWe write all task state updates to Elastic Search for operational insight. For\nnow, this is not part of the OSS implementation.\n\n\nWe use Edda to understand which ASG's are available in Titus. For now, this is\nnot part of the OSS implementation.", 
             "title": "Prereqs"
+        }, 
+        {
+            "location": "/install/prereqs/#required", 
+            "text": "", 
+            "title": "Required"
+        }, 
+        {
+            "location": "/install/prereqs/#linux", 
+            "text": "We currently run our agents on Ubuntu Xenial (16.04.2) with kernel 4.9.34 with\npatches for EFS. Until Titus open source supports EFS, it is likely that Xenial\nand a 4.9 kernel is sufficient.  We run all other tiers of Titus on Trusty.", 
+            "title": "Linux"
+        }, 
+        {
+            "location": "/install/prereqs/#mesos-and-zookeeper", 
+            "text": "Zookeeper 3.4.8 (with Exhibitor 1.5.5)  Mesos 1.0.1", 
+            "title": "Mesos and Zookeeper"
+        }, 
+        {
+            "location": "/install/prereqs/#spinnaker", 
+            "text": "We deploy Titus via Spinnaker to an EC2 cloud provider. Eventually we may\nrelease these pipelines, but for now we suggest direct deployments using\nthe AWS EC2 console.", 
+            "title": "Spinnaker"
+        }, 
+        {
+            "location": "/install/prereqs/#docker-registry", 
+            "text": "We operate a docker registry based on Docker Distribution. We have tested with\nDockerhub and suggest this or the EC2 Container Registry Service (ECR).", 
+            "title": "Docker Registry"
+        }, 
+        {
+            "location": "/install/prereqs/#aws-configuration", 
+            "text": "IAM Role and security group for Titus  TODO: specify what is required, for now tested with wide open security group\n  and  *  IAM role.   IAM Role and security group for app container  TODO: Need to specify a test sec group and IAM role", 
+            "title": "AWS Configuration"
+        }, 
+        {
+            "location": "/install/prereqs/#optional", 
+            "text": "We use Cassandra as our persistence store for Titus master. For OSS, we\ncurrent suggest the in-memory store.  We have integration with Eureka to disable agents and monitor health. For now,\nthis is not part of the OSS implementation.  We write all task state updates to Elastic Search for operational insight. For\nnow, this is not part of the OSS implementation.  We use Edda to understand which ASG's are available in Titus. For now, this is\nnot part of the OSS implementation.", 
+            "title": "Optional"
         }, 
         {
             "location": "/install/master/", 
