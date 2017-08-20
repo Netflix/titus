@@ -57,8 +57,18 @@
         }, 
         {
             "location": "/install/master/", 
-            "text": "", 
+            "text": "Master\n\n\nGateway\n\n\nRun as root\n\n\n\n\ninstall java8\n\n\nsudo apt-get update\n\n\nsudo apt-get install openjdk-8-jdk\n\n\nCopy titus-server-gateway/build/distribute/titus-server-gateway_\n.deb to server\n\n\nRun \ndpkg -i titus-server-gateway_\nversion\n.deb\n\n\n\n\nRun as Ubuntu user\n\n\n\n\nexport JAVA_OPTS=\u201d-Dtitus.gateway.masterIp=\nip\n -Dtitus.gateway.masterHttpPort=\nport\n\u201d\n\n\nStart server with \n./opt/titus-server-gateway/bin/titus-server-gateway | tee ~/titus.log", 
             "title": "Scheduler and Gateway"
+        }, 
+        {
+            "location": "/install/master/#master", 
+            "text": "", 
+            "title": "Master"
+        }, 
+        {
+            "location": "/install/master/#gateway", 
+            "text": "Run as root   install java8  sudo apt-get update  sudo apt-get install openjdk-8-jdk  Copy titus-server-gateway/build/distribute/titus-server-gateway_ .deb to server  Run  dpkg -i titus-server-gateway_ version .deb   Run as Ubuntu user   export JAVA_OPTS=\u201d-Dtitus.gateway.masterIp= ip  -Dtitus.gateway.masterHttpPort= port \u201d  Start server with  ./opt/titus-server-gateway/bin/titus-server-gateway | tee ~/titus.log", 
+            "title": "Gateway"
         }, 
         {
             "location": "/install/agent/", 

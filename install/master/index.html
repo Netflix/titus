@@ -70,6 +70,12 @@
     <a class="current" href="./">Scheduler and Gateway</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#master">Master</a></li>
+    
+
+    <li class="toctree-l3"><a href="#gateway">Gateway</a></li>
+    
+
     </ul>
                 </li>
                 <li class="">
@@ -123,7 +129,21 @@
           <div role="main">
             <div class="section">
               
-                
+                <h1 id="master">Master</h1>
+<h1 id="gateway">Gateway</h1>
+<p>Run as root</p>
+<ul>
+<li>install java8</li>
+<li><code>sudo apt-get update</code></li>
+<li><code>sudo apt-get install openjdk-8-jdk</code></li>
+<li>Copy titus-server-gateway/build/distribute/titus-server-gateway_<version>.deb to server</li>
+<li>Run <code>dpkg -i titus-server-gateway_&lt;version&gt;.deb</code></li>
+</ul>
+<p>Run as Ubuntu user</p>
+<ul>
+<li><code>export JAVA_OPTS=”-Dtitus.gateway.masterIp=&lt;ip&gt; -Dtitus.gateway.masterHttpPort=&lt;port&gt;”</code></li>
+<li>Start server with <code>./opt/titus-server-gateway/bin/titus-server-gateway | tee ~/titus.log</code></li>
+</ul>
               
             </div>
           </div>
