@@ -33,4 +33,7 @@ Ran mesos-slave with Docker image instead of installing natively.
 - Changed the pause image to use to imageName = "kubernetes/pause:latest"
 
 # titus-base-networking
-- 
+- In `https://stash.netflix.com/projects/BASEAMI/repos/nflx-base-networking/browse` run `./gradlew buildDeb` to
+create debian file. This is also in titus-vpc-driver as `base-networking.deb`.
+- Copy the debian to the Titus Agent host.
+- Run `dpkg -i` to install the debian.
