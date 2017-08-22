@@ -74,6 +74,15 @@
     <a class="current" href="./">Agent</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#mesos-slave">Mesos-slave</a></li>
+    
+
+    <li class="toctree-l3"><a href="#titus-executor">titus-executor</a></li>
+    
+
+    <li class="toctree-l3"><a href="#titus-vpc-driver">titus-vpc-driver</a></li>
+    
+
     </ul>
                 </li>
     </ul>
@@ -123,7 +132,25 @@
           <div role="main">
             <div class="section">
               
-                
+                <h1 id="mesos-slave">Mesos-slave</h1>
+<p>Ran mesos-slave with Docker image instead of installing natively.
+- TODO - need to do this without Docker
+- <code>docker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources="network:1000" --attributes="region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29"</code></p>
+<h1 id="titus-executor">titus-executor</h1>
+<ul>
+<li>Change registry URL in config.test.json to “registry.hub.docker.com/library”</li>
+<li>This allows simple Dockerhub images to be used for testing.</li>
+</ul>
+<h1 id="titus-vpc-driver">titus-vpc-driver</h1>
+<ul>
+<li>Created a hackday_environment.sh that populates env vars based on the stock values (e.g., NFLX_ACCOUNT)</li>
+<li>Hard coded values from the host being used (e.g., EC2_INSTANCE_ID or EC2_ENI_ID).</li>
+<li>Changed the “run” script to source this file instead of nflx_environment.sh.</li>
+<li>TODO: Convert from the stash snippet</li>
+<li>Ones that matter: export TITUS_REGISTRY="registry.hub.docker.com", </li>
+<li>Set env var TITUS_REGISTRY to export TITUS_REGISTRY="registry.hub.docker.com"</li>
+<li>Changed the pause image to use to imageName = "kubernetes/pause:latest"</li>
+</ul>
               
             </div>
           </div>
