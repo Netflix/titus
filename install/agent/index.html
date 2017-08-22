@@ -165,7 +165,8 @@ apt-get dist-upgrade
 <h1 id="titus-executor">titus-executor</h1>
 <ul>
 <li>Take the built titus-executor_linux_amd64 binary and put it on the host at /apps/titus-executor/bin/titus-executor</li>
-<li>Take the run script from /root/apps/titus-executor/bin and put it on the host at /apps/titus-executor/bin</li>
+<li>Take the testrun script from /test and put it on the host at /apps/titus-executor/bin/run</li>
+<li>You will need to update the line <code>export ZKHOSTS=127.0.0.1:2181</code> to point to your ZK server</li>
 <li>Ensure run is executable</li>
 <li>Take the config file from /test/config/config.test.json and put it on the host at /etc/titus-executor/config.json</li>
 <li>Ensure the registry is updated or use the dockerhub link of “registry.hub.docker.com/library”</li>
