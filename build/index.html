@@ -57,6 +57,9 @@
     <a class="current" href="./">Building the Code</a>
     <ul class="subnav">
             
+    <li class="toctree-l2"><a href="#agent">Agent</a></li>
+    
+
     </ul>
 	    </li>
           
@@ -75,6 +78,17 @@
                 <li class="">
                     
     <a class="" href="../install/agent/">Agent</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Testing</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../test/batch/">Basic batch task</a>
                 </li>
     </ul>
 	    </li>
@@ -119,7 +133,15 @@
           <div role="main">
             <div class="section">
               
-                
+                <h1 id="agent">Agent</h1>
+<pre><code>mkdir -p $GOPATH/src/github.com/Netflix
+cd $GOPATH/src/github.com/Netflix
+git clone https://github.com/Netflix/titus-agent.git
+cd titus-agent
+make build
+</code></pre>
+
+<p>This will produce a titus-executor binary in the root directory of titus-agent</p>
               
             </div>
           </div>

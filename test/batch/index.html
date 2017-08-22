@@ -7,24 +7,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
-  <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>FAQ - Titus</title>
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Basic batch task - Titus</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
-  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
   
   <script>
     // Current page data
-    var mkdocs_page_name = "FAQ";
-    var mkdocs_page_input_path = "faq.md";
-    var mkdocs_page_url = "/faq/";
+    var mkdocs_page_name = "Basic batch task";
+    var mkdocs_page_input_path = "test/batch.md";
+    var mkdocs_page_url = "/test/batch/";
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
   
 </head>
 
@@ -35,9 +35,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> Titus</a>
+        <a href="../.." class="icon icon-home"> Titus</a>
         <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
   </form>
 </div>
@@ -49,12 +49,12 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="..">Introduction</a>
+    <a class="" href="../..">Introduction</a>
 	    </li>
           
             <li class="toctree-l1">
 		
-    <a class="" href="../build/">Building the Code</a>
+    <a class="" href="../../build/">Building the Code</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -63,15 +63,15 @@
     <ul class="subnav">
                 <li class="">
                     
-    <a class="" href="../install/prereqs/">Prereqs</a>
+    <a class="" href="../../install/prereqs/">Prereqs</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../install/master/">Scheduler and Gateway</a>
+    <a class="" href="../../install/master/">Scheduler and Gateway</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../install/agent/">Agent</a>
+    <a class="" href="../../install/agent/">Agent</a>
                 </li>
     </ul>
 	    </li>
@@ -80,19 +80,22 @@
 		
     <span class="caption-text">Testing</span>
     <ul class="subnav">
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../test/batch/">Basic batch task</a>
+    <a class="current" href="./">Basic batch task</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#testing-the-most-basic-job">Testing the most basic job</a></li>
+    
+
+    </ul>
                 </li>
     </ul>
 	    </li>
           
-            <li class="toctree-l1 current">
+            <li class="toctree-l1">
 		
-    <a class="current" href="./">FAQ</a>
-    <ul class="subnav">
-            
-    </ul>
+    <a class="" href="../../faq/">FAQ</a>
 	    </li>
           
         </ul>
@@ -105,7 +108,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">Titus</a>
+        <a href="../..">Titus</a>
       </nav>
 
       
@@ -113,14 +116,18 @@
         <div class="rst-content">
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="..">Docs</a> &raquo;</li>
+    <li><a href="../..">Docs</a> &raquo;</li>
     
       
+        
+          <li>Testing &raquo;</li>
+        
+      
     
-    <li>FAQ</li>
+    <li>Basic batch task</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/Netflix/titus/edit/master/docs/faq.md"
+        <a href="https://github.com/Netflix/titus/edit/master/docs/test/batch.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -130,7 +137,20 @@
           <div role="main">
             <div class="section">
               
-                
+                <h1 id="testing-the-most-basic-job">Testing the most basic job</h1>
+<p>From the gateway node</p>
+<pre><code>curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
+   &quot;applicationName&quot;: &quot;ubuntu&quot;,
+   &quot;version&quot;: &quot;latest&quot;,
+   &quot;type&quot;: &quot;batch&quot;,
+   &quot;entryPoint&quot;: &quot;sleep 10&quot;,
+   &quot;instances&quot;: 1,
+   &quot;cpu&quot;: 1,
+   &quot;memory&quot;: 1024,
+   &quot;disk&quot;: 10000,
+   &quot;networkMbps&quot;: 128
+ }' 'http://localhost:7001/api/v2/jobs'
+</code></pre>
               
             </div>
           </div>
@@ -138,8 +158,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="../../faq/" class="btn btn-neutral float-right" title="FAQ">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-        <a href="../test/batch/" class="btn btn-neutral" title="Basic batch task"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+        <a href="../../install/agent/" class="btn btn-neutral" title="Agent"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -167,12 +189,14 @@
           <a href="https://github.com/Netflix/titus" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../test/batch/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../../install/agent/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
+      
+        <span style="margin-left: 15px"><a href="../../faq/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
-    <script src="../js/theme.js"></script>
+    <script src="../../js/theme.js"></script>
 
 </body>
 </html>

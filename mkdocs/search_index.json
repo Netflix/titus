@@ -12,12 +12,17 @@
         }, 
         {
             "location": "/build/", 
-            "text": "", 
+            "text": "Agent\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-agent.git\ncd titus-agent\nmake build\n\n\n\n\nThis will produce a titus-executor binary in the root directory of titus-agent", 
             "title": "Building the Code"
         }, 
         {
+            "location": "/build/#agent", 
+            "text": "mkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-agent.git\ncd titus-agent\nmake build  This will produce a titus-executor binary in the root directory of titus-agent", 
+            "title": "Agent"
+        }, 
+        {
             "location": "/install/prereqs/", 
-            "text": "Required\n\n\nLinux\n\n\nWe currently run our agents on Ubuntu Xenial (16.04.2) with kernel 4.9.34 with\npatches for EFS. Until Titus open source supports EFS, it is likely that Xenial\nand a 4.9 kernel is sufficient.\n\n\nWe run all other tiers of Titus on Trusty.\n\n\nMesos and Zookeeper\n\n\n\n\nZookeeper 3.4.8 (with Exhibitor 1.5.5)\n\n\nMesos 1.0.1\n\n\n\n\nSpinnaker\n\n\nWe deploy Titus via Spinnaker to an EC2 cloud provider. Eventually we may\nrelease these pipelines, but for now we suggest direct deployments using\nthe AWS EC2 console.\n\n\nDocker Registry\n\n\nWe operate a docker registry based on Docker Distribution. We have tested with\nDockerhub and suggest this or the EC2 Container Registry Service (ECR).\n\n\nAWS Configuration\n\n\n\n\nIAM Role and security group for Titus\n\n\nTODO: specify what is required, for now tested with wide open security group\n  and \n*\n IAM role. \n\n\nIAM Role and security group for app container\n\n\nTODO: Need to specify a test sec group and IAM role\n\n\n\n\nOptional\n\n\nWe use Cassandra as our persistence store for Titus master. For OSS, we\ncurrent suggest the in-memory store.\n\n\nWe have integration with Eureka to disable agents and monitor health. For now,\nthis is not part of the OSS implementation.\n\n\nWe write all task state updates to Elastic Search for operational insight. For\nnow, this is not part of the OSS implementation.\n\n\nWe use Edda to understand which ASG's are available in Titus. For now, this is\nnot part of the OSS implementation.", 
+            "text": "Required\n\n\nLinux\n\n\nWe currently run our agents on Ubuntu Xenial (16.04.2) with kernel 4.9.34 with\npatches for EFS. Until Titus open source supports EFS, it is likely that Xenial\nand a 4.9 kernel is sufficient.\n\n\nWe run all other tiers of Titus on Trusty.\n\n\nMesos and Zookeeper\n\n\n\n\nZookeeper 3.4.8 (with Exhibitor 1.5.5)\n\n\nMesos 1.0.1\n\n\n\n\nLinks\n- IPOFMESOS:5050\n- IPOFMESOS:5050/slaves\n\n\nSpinnaker\n\n\nWe deploy Titus via Spinnaker to an EC2 cloud provider. Eventually we may\nrelease these pipelines, but for now we suggest direct deployments using\nthe AWS EC2 console.\n\n\nDocker Registry\n\n\nWe operate a docker registry based on Docker Distribution. We have tested with\nDockerhub and suggest this or the EC2 Container Registry Service (ECR).\n\n\nAWS Configuration\n\n\n\n\nIAM Role and security group for Titus\n\n\nTODO: specify what is required, for now tested with wide open security group\n  and \n*\n IAM role. \n\n\nIAM Role and security group for app container\n\n\nTODO: Need to specify a test sec group and IAM role\n\n\n\n\nOptional\n\n\nWe use Cassandra as our persistence store for Titus master. For OSS, we\ncurrent suggest the in-memory store.\n\n\nWe have integration with Eureka to disable agents and monitor health. For now,\nthis is not part of the OSS implementation.\n\n\nWe write all task state updates to Elastic Search for operational insight. For\nnow, this is not part of the OSS implementation.\n\n\nWe use Edda to understand which ASG's are available in Titus. For now, this is\nnot part of the OSS implementation.", 
             "title": "Prereqs"
         }, 
         {
@@ -32,7 +37,7 @@
         }, 
         {
             "location": "/install/prereqs/#mesos-and-zookeeper", 
-            "text": "Zookeeper 3.4.8 (with Exhibitor 1.5.5)  Mesos 1.0.1", 
+            "text": "Zookeeper 3.4.8 (with Exhibitor 1.5.5)  Mesos 1.0.1   Links\n- IPOFMESOS:5050\n- IPOFMESOS:5050/slaves", 
             "title": "Mesos and Zookeeper"
         }, 
         {
@@ -72,8 +77,18 @@
         }, 
         {
             "location": "/install/agent/", 
-            "text": "Mesos-slave\n\n\nRan mesos-slave with Docker image instead of installing natively.\n- TODO - need to do this without Docker\n- \ndocker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources=\"network:1000\" --attributes=\"region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29\"\n\n\ntitus-executor\n\n\n\n\nChange registry URL in config.test.json to \u201cregistry.hub.docker.com/library\u201d\n\n\nThis allows simple Dockerhub images to be used for testing.\n\n\n\n\ntitus-vpc-driver\n\n\n\n\nCreated a hackday_environment.sh that populates env vars based on the stock values (e.g., NFLX_ACCOUNT)\n\n\nHard coded values from the host being used (e.g., EC2_INSTANCE_ID or EC2_ENI_ID).\n\n\nChanged the \u201crun\u201d script to source this file instead of nflx_environment.sh.\n\n\nTODO: Convert from the stash snippet\n\n\nOnes that matter: export TITUS_REGISTRY=\"registry.hub.docker.com\", \n\n\nSet env var TITUS_REGISTRY to export TITUS_REGISTRY=\"registry.hub.docker.com\"\n\n\nChanged the pause image to use to imageName = \"kubernetes/pause:latest\"", 
+            "text": "Upgrade Ubuntu\n\n\nsudo su\napt-get update\napt-get upgrade\napt-get dist-upgrade\n\n\n\n\nInstall Docker\n\n\nInstall docker as instructed \nhere\n\n\nMesos-slave\n\n\nRan mesos-slave with Docker image instead of installing natively.\n- TODO - need to do this without Docker\n- \ndocker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources=\"network:1000\" --attributes=\"region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29\"\n\n\ntitus-executor\n\n\n\n\nTake the built titus-executor_linux_amd64 binary and put it on the host at /apps/titus-executor/bin/titus-executor\n\n\nTake the run script from /root/apps/titus-executor/bin and put it on the host at /apps/titus-executor/bin\n\n\nEnsure run is executable\n\n\nTake the config file from /test/config/config.test.json and put it on the host at /etc/titus-executor/config.json\n\n\nEnsure the registry is updated or use the dockerhub link of \u201cregistry.hub.docker.com/library\u201d\n\n\nTODO: use gradle to create deb files\n\n\n\n\ntitus-vpc-driver\n\n\n\n\nCreated a hackday_environment.sh that populates env vars based on the stock values (e.g., NFLX_ACCOUNT)\n\n\nHard coded values from the host being used (e.g., EC2_INSTANCE_ID or EC2_ENI_ID).\n\n\nChanged the \u201crun\u201d script to source this file instead of nflx_environment.sh.\n\n\nTODO: Convert from the stash snippet\n\n\nOnes that matter: export TITUS_REGISTRY=\"registry.hub.docker.com\", \n\n\nSet env var TITUS_REGISTRY to export TITUS_REGISTRY=\"registry.hub.docker.com\"\n\n\nChanged the pause image to use to imageName = \"kubernetes/pause:latest\"", 
             "title": "Agent"
+        }, 
+        {
+            "location": "/install/agent/#upgrade-ubuntu", 
+            "text": "sudo su\napt-get update\napt-get upgrade\napt-get dist-upgrade", 
+            "title": "Upgrade Ubuntu"
+        }, 
+        {
+            "location": "/install/agent/#install-docker", 
+            "text": "Install docker as instructed  here", 
+            "title": "Install Docker"
         }, 
         {
             "location": "/install/agent/#mesos-slave", 
@@ -82,13 +97,23 @@
         }, 
         {
             "location": "/install/agent/#titus-executor", 
-            "text": "Change registry URL in config.test.json to \u201cregistry.hub.docker.com/library\u201d  This allows simple Dockerhub images to be used for testing.", 
+            "text": "Take the built titus-executor_linux_amd64 binary and put it on the host at /apps/titus-executor/bin/titus-executor  Take the run script from /root/apps/titus-executor/bin and put it on the host at /apps/titus-executor/bin  Ensure run is executable  Take the config file from /test/config/config.test.json and put it on the host at /etc/titus-executor/config.json  Ensure the registry is updated or use the dockerhub link of \u201cregistry.hub.docker.com/library\u201d  TODO: use gradle to create deb files", 
             "title": "titus-executor"
         }, 
         {
             "location": "/install/agent/#titus-vpc-driver", 
             "text": "Created a hackday_environment.sh that populates env vars based on the stock values (e.g., NFLX_ACCOUNT)  Hard coded values from the host being used (e.g., EC2_INSTANCE_ID or EC2_ENI_ID).  Changed the \u201crun\u201d script to source this file instead of nflx_environment.sh.  TODO: Convert from the stash snippet  Ones that matter: export TITUS_REGISTRY=\"registry.hub.docker.com\",   Set env var TITUS_REGISTRY to export TITUS_REGISTRY=\"registry.hub.docker.com\"  Changed the pause image to use to imageName = \"kubernetes/pause:latest\"", 
             "title": "titus-vpc-driver"
+        }, 
+        {
+            "location": "/test/batch/", 
+            "text": "Testing the most basic job\n\n\nFrom the gateway node\n\n\ncurl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{\n   \napplicationName\n: \nubuntu\n,\n   \nversion\n: \nlatest\n,\n   \ntype\n: \nbatch\n,\n   \nentryPoint\n: \nsleep 10\n,\n   \ninstances\n: 1,\n   \ncpu\n: 1,\n   \nmemory\n: 1024,\n   \ndisk\n: 10000,\n   \nnetworkMbps\n: 128\n }' 'http://localhost:7001/api/v2/jobs'", 
+            "title": "Basic batch task"
+        }, 
+        {
+            "location": "/test/batch/#testing-the-most-basic-job", 
+            "text": "From the gateway node  curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{\n    applicationName :  ubuntu ,\n    version :  latest ,\n    type :  batch ,\n    entryPoint :  sleep 10 ,\n    instances : 1,\n    cpu : 1,\n    memory : 1024,\n    disk : 10000,\n    networkMbps : 128\n }' 'http://localhost:7001/api/v2/jobs'", 
+            "title": "Testing the most basic job"
         }, 
         {
             "location": "/faq/", 

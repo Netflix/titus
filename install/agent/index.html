@@ -74,6 +74,12 @@
     <a class="current" href="./">Agent</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#upgrade-ubuntu">Upgrade Ubuntu</a></li>
+    
+
+    <li class="toctree-l3"><a href="#install-docker">Install Docker</a></li>
+    
+
     <li class="toctree-l3"><a href="#mesos-slave">Mesos-slave</a></li>
     
 
@@ -84,6 +90,17 @@
     
 
     </ul>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Testing</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../test/batch/">Basic batch task</a>
                 </li>
     </ul>
 	    </li>
@@ -132,14 +149,27 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="mesos-slave">Mesos-slave</h1>
+                <h1 id="upgrade-ubuntu">Upgrade Ubuntu</h1>
+<pre><code>sudo su
+apt-get update
+apt-get upgrade
+apt-get dist-upgrade
+</code></pre>
+
+<h1 id="install-docker">Install Docker</h1>
+<p>Install docker as instructed <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository">here</a></p>
+<h1 id="mesos-slave">Mesos-slave</h1>
 <p>Ran mesos-slave with Docker image instead of installing natively.
 - TODO - need to do this without Docker
 - <code>docker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources="network:1000" --attributes="region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29"</code></p>
 <h1 id="titus-executor">titus-executor</h1>
 <ul>
-<li>Change registry URL in config.test.json to “registry.hub.docker.com/library”</li>
-<li>This allows simple Dockerhub images to be used for testing.</li>
+<li>Take the built titus-executor_linux_amd64 binary and put it on the host at /apps/titus-executor/bin/titus-executor</li>
+<li>Take the run script from /root/apps/titus-executor/bin and put it on the host at /apps/titus-executor/bin</li>
+<li>Ensure run is executable</li>
+<li>Take the config file from /test/config/config.test.json and put it on the host at /etc/titus-executor/config.json</li>
+<li>Ensure the registry is updated or use the dockerhub link of “registry.hub.docker.com/library”</li>
+<li>TODO: use gradle to create deb files</li>
 </ul>
 <h1 id="titus-vpc-driver">titus-vpc-driver</h1>
 <ul>
@@ -158,7 +188,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../../faq/" class="btn btn-neutral float-right" title="FAQ">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../test/batch/" class="btn btn-neutral float-right" title="Basic batch task">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../master/" class="btn btn-neutral" title="Scheduler and Gateway"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -192,7 +222,7 @@
         <span><a href="../master/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../../faq/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../../test/batch/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
