@@ -16,8 +16,9 @@ Ran mesos-slave with Docker image instead of installing natively.
 
 # titus-executor
 - Take the built titus-executor_linux_amd64 binary and put it on the host at /apps/titus-executor/bin/titus-executor
-- Take the run script from /root/apps/titus-executor/bin and put it on the host at /apps/titus-executor/bin
-- Ensure run is executable
+- Take the testrun script from /test and put it on the host at /apps/titus-executor/bin/run
+  - You will need to update the line `export ZKHOSTS=127.0.0.1:2181` to point to your ZK server
+  - Ensure run is executable
 - Take the config file from /test/config/config.test.json and put it on the host at /etc/titus-executor/config.json
   - Ensure the registry is updated or use the dockerhub link of “registry.hub.docker.com/library”
 - TODO: use gradle to create deb files
