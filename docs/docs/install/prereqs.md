@@ -10,6 +10,10 @@ We run all other tiers of Titus on Trusty.
 - Zookeeper 3.4.8 (with Exhibitor 1.5.5)
 - Mesos 1.0.1
 
+Links
+- IPOFMESOS:5050
+- IPOFMESOS:5050/slaves
+
 # Spinnaker
 We deploy Titus via Spinnaker to an EC2 cloud provider. Eventually we may
 release these pipelines, but for now we suggest direct deployments using
