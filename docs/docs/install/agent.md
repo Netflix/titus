@@ -20,7 +20,7 @@ Ran mesos-slave with Docker image instead of installing natively.
 # titus-vpc-driver
 - dpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb
   - We use `--force-overwrite` flag to ensure all files are updated.
-- Run `sudo /apps/titus-vpc-network-driver/bin/run` to start the driver. Since all of the other
+- Run `sudo /apps/titus-vpc-driver/bin/run` to start the driver. Since all of the other
 components are in the host network, it should be fine to run it from the host.
 
 # titus-metadata-service
