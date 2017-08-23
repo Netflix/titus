@@ -15,28 +15,14 @@ Ran mesos-slave with Docker image instead of installing natively.
 - `docker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources="network:1000" --attributes="region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29"`
 
 # titus-executor
-- Take the built titus-executor_linux_amd64 binary and put it on the host at /apps/titus-executor/bin/titus-executor
-- Take the testrun script from /test and put it on the host at /apps/titus-executor/bin/run
-  - You will need to update the line `export ZKHOSTS=127.0.0.1:2181` to point to your ZK server
-  - Ensure run is executable
-- Take the config file from /test/config/config.test.json and put it on the host at /etc/titus-executor/config.json
-  - Ensure the registry is updated or use the dockerhub link of “registry.hub.docker.com/library”
-- TODO: use gradle to create deb files
+- dpkg -i titus-agent_0.0.1-1_all.deb
 
 # titus-vpc-driver
-- Install the titus-vpc-driver debian. When this is installed use the `--force-overwrite` flag to ensure all files are updated.
-- Created a hackday_environment.sh that populates env vars based on the stock values (e.g., NFLX_ACCOUNT)
-- Hard coded values from the host being used (e.g., EC2_INSTANCE_ID or EC2_ENI_ID).
-- Changed the “run” script to source this file instead of nflx_environment.sh.
-- TODO: Convert from the stash snippet
-- Ones that matter: export TITUS_REGISTRY="registry.hub.docker.com", 
-- Set env var TITUS_REGISTRY to export TITUS_REGISTRY="registry.hub.docker.com"
-- Changed the pause image to use to imageName = "kubernetes/pause:latest"
+- dpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb
+  - We use `--force-overwrite` flag to ensure all files are updated.
 - Run `sudo /apps/titus-vpc-network-driver/bin/run` to start the driver. Since all of the other
 components are in the host network, it should be fine to run it from the host.
 
-# titus-base-networking
-- In `https://stash.netflix.com/projects/BASEAMI/repos/nflx-base-networking/browse` run `./gradlew buildDeb` to
-create debian file. This is also in titus-vpc-driver as `base-networking.deb`.
-- Copy the debian to the Titus Agent host.
-- Run `dpkg -i` to install the debian.
+# titus-metadata-service
+- dpkg -i titus-metadata-service_0.0.1-1_all.deb
+- Run `sudo /apps/titus-metadata-service/bin/run` to start the proxy
