@@ -11,7 +11,7 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
    "instances": 1,
    "cpu": 1,
    "memory": 1024,
-   "disk": 10000,
+   "disk": 1000,
    "networkMbps": 128
  }' 'http://localhost:7001/api/v2/jobs'
 ```
