@@ -24,6 +24,7 @@ Ran mesos-slave with Docker image instead of installing natively.
 - TODO: use gradle to create deb files
 
 # titus-vpc-driver
+- Install the titus-vpc-driver debian. When this is installed use the `--force-overwrite` flag to ensure all files are updated.
 - Created a hackday_environment.sh that populates env vars based on the stock values (e.g., NFLX_ACCOUNT)
 - Hard coded values from the host being used (e.g., EC2_INSTANCE_ID or EC2_ENI_ID).
 - Changed the “run” script to source this file instead of nflx_environment.sh.
