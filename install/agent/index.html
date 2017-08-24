@@ -74,6 +74,9 @@
     <a class="current" href="./">Agent</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#creating-a-titus-agent-launch-configuration-and-asg">Creating a Titus agent launch configuration and ASG</a></li>
+    
+
     <li class="toctree-l3"><a href="#upgrade-ubuntu">Upgrade Ubuntu</a></li>
     
 
@@ -87,6 +90,9 @@
     
 
     <li class="toctree-l3"><a href="#titus-vpc-driver">titus-vpc-driver</a></li>
+    
+
+    <li class="toctree-l3"><a href="#titus-metadata-service">titus-metadata-service</a></li>
     
 
     </ul>
@@ -149,11 +155,28 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="upgrade-ubuntu">Upgrade Ubuntu</h1>
+                <h1 id="creating-a-titus-agent-launch-configuration-and-asg">Creating a Titus agent launch configuration and ASG</h1>
+<p>When Spinnaker creates agent deployments, it creates the following user data in the launch config for an ASG. The
+agent processes depend on these being right.</p>
+<pre><code>NETFLIX_ACCOUNT=&quot;test&quot;
+NETFLIX_ACCOUNT_TYPE=&quot;main&quot;
+NETFLIX_ENVIRONMENT=&quot;test&quot;
+NETFLIX_APP=&quot;titusagent&quot;
+NETFLIX_APPUSER=&quot;titusagent&quot;
+NETFLIX_STACK=&quot;mainvpc&quot;
+NETFLIX_CLUSTER=&quot;titusagent-mainvpc-m4.4xlarge.2&quot;
+NETFLIX_DETAIL=&quot;m4.4xlarge.2&quot;
+NETFLIX_AUTO_SCALE_GROUP=&quot;titusagent-mainvpc-m4.4xlarge.2-v004&quot;
+NETFLIX_LAUNCH_CONFIG=&quot;titusagent-mainvpc-m4.4xlarge.2-v004-07202017195940&quot;
+EC2_REGION=&quot;eu-west-1&quot;
+</code></pre>
+
+<h1 id="upgrade-ubuntu">Upgrade Ubuntu</h1>
 <pre><code>sudo su
 apt-get update
 apt-get upgrade
 apt-get dist-upgrade
+shutdown -r now
 </code></pre>
 
 <h1 id="install-docker">Install Docker</h1>
@@ -164,23 +187,19 @@ apt-get dist-upgrade
 - <code>docker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources="network:1000" --attributes="region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29"</code></p>
 <h1 id="titus-executor">titus-executor</h1>
 <ul>
-<li>Take the built titus-executor_linux_amd64 binary and put it on the host at /apps/titus-executor/bin/titus-executor</li>
-<li>Take the testrun script from /test and put it on the host at /apps/titus-executor/bin/run</li>
-<li>You will need to update the line <code>export ZKHOSTS=127.0.0.1:2181</code> to point to your ZK server</li>
-<li>Ensure run is executable</li>
-<li>Take the config file from /test/config/config.test.json and put it on the host at /etc/titus-executor/config.json</li>
-<li>Ensure the registry is updated or use the dockerhub link of “registry.hub.docker.com/library”</li>
-<li>TODO: use gradle to create deb files</li>
+<li>dpkg -i titus-agent_0.0.1-1_all.deb</li>
 </ul>
 <h1 id="titus-vpc-driver">titus-vpc-driver</h1>
 <ul>
-<li>Created a hackday_environment.sh that populates env vars based on the stock values (e.g., NFLX_ACCOUNT)</li>
-<li>Hard coded values from the host being used (e.g., EC2_INSTANCE_ID or EC2_ENI_ID).</li>
-<li>Changed the “run” script to source this file instead of nflx_environment.sh.</li>
-<li>TODO: Convert from the stash snippet</li>
-<li>Ones that matter: export TITUS_REGISTRY="registry.hub.docker.com", </li>
-<li>Set env var TITUS_REGISTRY to export TITUS_REGISTRY="registry.hub.docker.com"</li>
-<li>Changed the pause image to use to imageName = "kubernetes/pause:latest"</li>
+<li>dpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb</li>
+<li>We use <code>--force-overwrite</code> flag to ensure all files are updated.</li>
+<li>Run <code>sudo /apps/titus-vpc-driver/bin/run</code> to start the driver. Since all of the other
+components are in the host network, it should be fine to run it from the host.</li>
+</ul>
+<h1 id="titus-metadata-service">titus-metadata-service</h1>
+<ul>
+<li>dpkg -i titus-metadata-service_0.0.1-1_all.deb</li>
+<li>Run <code>sudo /apps/titus-metadata-service/bin/run</code> to start the proxy</li>
 </ul>
               
             </div>

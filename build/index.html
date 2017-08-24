@@ -60,6 +60,12 @@
     <li class="toctree-l2"><a href="#agent">Agent</a></li>
     
 
+    <li class="toctree-l2"><a href="#vpc-driver">VPC Driver</a></li>
+    
+
+    <li class="toctree-l2"><a href="#metadata-service">Metadata Service</a></li>
+    
+
     </ul>
 	    </li>
           
@@ -139,9 +145,28 @@ cd $GOPATH/src/github.com/Netflix
 git clone https://github.com/Netflix/titus-agent.git
 cd titus-agent
 make build
+./gradlew clean buildDeb
 </code></pre>
 
-<p>This will produce a titus-executor binary in the root directory of titus-agent</p>
+<h1 id="vpc-driver">VPC Driver</h1>
+<pre><code>mkdir -p $GOPATH/src/github.com/Netflix
+cd $GOPATH/src/github.com/Netflix
+git clone https://github.com/Netflix/titus-vpc-driver.git
+cd titus-vpc-driver
+go build
+./gradlew clean buildDeb
+</code></pre>
+
+<h1 id="metadata-service">Metadata Service</h1>
+<pre><code>mkdir -p $GOPATH/src/github.com/Netflix
+cd $GOPATH/src/github.com/Netflix
+git clone https://github.com/Netflix/titus-metadata-service.git
+cd titus-metadata-service
+make build
+./gradlew clean buildDeb
+</code></pre>
+
+<p>This will produce product three deb files under build/distributions</p>
               
             </div>
           </div>

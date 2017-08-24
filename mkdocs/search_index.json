@@ -12,13 +12,23 @@
         }, 
         {
             "location": "/build/", 
-            "text": "Agent\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-agent.git\ncd titus-agent\nmake build\n\n\n\n\nThis will produce a titus-executor binary in the root directory of titus-agent", 
+            "text": "Agent\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-agent.git\ncd titus-agent\nmake build\n./gradlew clean buildDeb\n\n\n\n\nVPC Driver\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-vpc-driver.git\ncd titus-vpc-driver\ngo build\n./gradlew clean buildDeb\n\n\n\n\nMetadata Service\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-metadata-service.git\ncd titus-metadata-service\nmake build\n./gradlew clean buildDeb\n\n\n\n\nThis will produce product three deb files under build/distributions", 
             "title": "Building the Code"
         }, 
         {
             "location": "/build/#agent", 
-            "text": "mkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-agent.git\ncd titus-agent\nmake build  This will produce a titus-executor binary in the root directory of titus-agent", 
+            "text": "mkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-agent.git\ncd titus-agent\nmake build\n./gradlew clean buildDeb", 
             "title": "Agent"
+        }, 
+        {
+            "location": "/build/#vpc-driver", 
+            "text": "mkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-vpc-driver.git\ncd titus-vpc-driver\ngo build\n./gradlew clean buildDeb", 
+            "title": "VPC Driver"
+        }, 
+        {
+            "location": "/build/#metadata-service", 
+            "text": "mkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-metadata-service.git\ncd titus-metadata-service\nmake build\n./gradlew clean buildDeb  This will produce product three deb files under build/distributions", 
+            "title": "Metadata Service"
         }, 
         {
             "location": "/install/prereqs/", 
@@ -77,12 +87,17 @@
         }, 
         {
             "location": "/install/agent/", 
-            "text": "Upgrade Ubuntu\n\n\nsudo su\napt-get update\napt-get upgrade\napt-get dist-upgrade\n\n\n\n\nInstall Docker\n\n\nInstall docker as instructed \nhere\n\n\nMesos-slave\n\n\nRan mesos-slave with Docker image instead of installing natively.\n- TODO - need to do this without Docker\n- \ndocker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources=\"network:1000\" --attributes=\"region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29\"\n\n\ntitus-executor\n\n\n\n\nTake the built titus-executor_linux_amd64 binary and put it on the host at /apps/titus-executor/bin/titus-executor\n\n\nTake the testrun script from /test and put it on the host at /apps/titus-executor/bin/run\n\n\nYou will need to update the line \nexport ZKHOSTS=127.0.0.1:2181\n to point to your ZK server\n\n\nEnsure run is executable\n\n\nTake the config file from /test/config/config.test.json and put it on the host at /etc/titus-executor/config.json\n\n\nEnsure the registry is updated or use the dockerhub link of \u201cregistry.hub.docker.com/library\u201d\n\n\nTODO: use gradle to create deb files\n\n\n\n\ntitus-vpc-driver\n\n\n\n\nCreated a hackday_environment.sh that populates env vars based on the stock values (e.g., NFLX_ACCOUNT)\n\n\nHard coded values from the host being used (e.g., EC2_INSTANCE_ID or EC2_ENI_ID).\n\n\nChanged the \u201crun\u201d script to source this file instead of nflx_environment.sh.\n\n\nTODO: Convert from the stash snippet\n\n\nOnes that matter: export TITUS_REGISTRY=\"registry.hub.docker.com\", \n\n\nSet env var TITUS_REGISTRY to export TITUS_REGISTRY=\"registry.hub.docker.com\"\n\n\nChanged the pause image to use to imageName = \"kubernetes/pause:latest\"", 
+            "text": "Creating a Titus agent launch configuration and ASG\n\n\nWhen Spinnaker creates agent deployments, it creates the following user data in the launch config for an ASG. The\nagent processes depend on these being right.\n\n\nNETFLIX_ACCOUNT=\ntest\n\nNETFLIX_ACCOUNT_TYPE=\nmain\n\nNETFLIX_ENVIRONMENT=\ntest\n\nNETFLIX_APP=\ntitusagent\n\nNETFLIX_APPUSER=\ntitusagent\n\nNETFLIX_STACK=\nmainvpc\n\nNETFLIX_CLUSTER=\ntitusagent-mainvpc-m4.4xlarge.2\n\nNETFLIX_DETAIL=\nm4.4xlarge.2\n\nNETFLIX_AUTO_SCALE_GROUP=\ntitusagent-mainvpc-m4.4xlarge.2-v004\n\nNETFLIX_LAUNCH_CONFIG=\ntitusagent-mainvpc-m4.4xlarge.2-v004-07202017195940\n\nEC2_REGION=\neu-west-1\n\n\n\n\n\nUpgrade Ubuntu\n\n\nsudo su\napt-get update\napt-get upgrade\napt-get dist-upgrade\nshutdown -r now\n\n\n\n\nInstall Docker\n\n\nInstall docker as instructed \nhere\n\n\nMesos-slave\n\n\nRan mesos-slave with Docker image instead of installing natively.\n- TODO - need to do this without Docker\n- \ndocker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources=\"network:1000\" --attributes=\"region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29\"\n\n\ntitus-executor\n\n\n\n\ndpkg -i titus-agent_0.0.1-1_all.deb\n\n\n\n\ntitus-vpc-driver\n\n\n\n\ndpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb\n\n\nWe use \n--force-overwrite\n flag to ensure all files are updated.\n\n\nRun \nsudo /apps/titus-vpc-driver/bin/run\n to start the driver. Since all of the other\ncomponents are in the host network, it should be fine to run it from the host.\n\n\n\n\ntitus-metadata-service\n\n\n\n\ndpkg -i titus-metadata-service_0.0.1-1_all.deb\n\n\nRun \nsudo /apps/titus-metadata-service/bin/run\n to start the proxy", 
             "title": "Agent"
         }, 
         {
+            "location": "/install/agent/#creating-a-titus-agent-launch-configuration-and-asg", 
+            "text": "When Spinnaker creates agent deployments, it creates the following user data in the launch config for an ASG. The\nagent processes depend on these being right.  NETFLIX_ACCOUNT= test \nNETFLIX_ACCOUNT_TYPE= main \nNETFLIX_ENVIRONMENT= test \nNETFLIX_APP= titusagent \nNETFLIX_APPUSER= titusagent \nNETFLIX_STACK= mainvpc \nNETFLIX_CLUSTER= titusagent-mainvpc-m4.4xlarge.2 \nNETFLIX_DETAIL= m4.4xlarge.2 \nNETFLIX_AUTO_SCALE_GROUP= titusagent-mainvpc-m4.4xlarge.2-v004 \nNETFLIX_LAUNCH_CONFIG= titusagent-mainvpc-m4.4xlarge.2-v004-07202017195940 \nEC2_REGION= eu-west-1", 
+            "title": "Creating a Titus agent launch configuration and ASG"
+        }, 
+        {
             "location": "/install/agent/#upgrade-ubuntu", 
-            "text": "sudo su\napt-get update\napt-get upgrade\napt-get dist-upgrade", 
+            "text": "sudo su\napt-get update\napt-get upgrade\napt-get dist-upgrade\nshutdown -r now", 
             "title": "Upgrade Ubuntu"
         }, 
         {
@@ -97,22 +112,27 @@
         }, 
         {
             "location": "/install/agent/#titus-executor", 
-            "text": "Take the built titus-executor_linux_amd64 binary and put it on the host at /apps/titus-executor/bin/titus-executor  Take the testrun script from /test and put it on the host at /apps/titus-executor/bin/run  You will need to update the line  export ZKHOSTS=127.0.0.1:2181  to point to your ZK server  Ensure run is executable  Take the config file from /test/config/config.test.json and put it on the host at /etc/titus-executor/config.json  Ensure the registry is updated or use the dockerhub link of \u201cregistry.hub.docker.com/library\u201d  TODO: use gradle to create deb files", 
+            "text": "dpkg -i titus-agent_0.0.1-1_all.deb", 
             "title": "titus-executor"
         }, 
         {
             "location": "/install/agent/#titus-vpc-driver", 
-            "text": "Created a hackday_environment.sh that populates env vars based on the stock values (e.g., NFLX_ACCOUNT)  Hard coded values from the host being used (e.g., EC2_INSTANCE_ID or EC2_ENI_ID).  Changed the \u201crun\u201d script to source this file instead of nflx_environment.sh.  TODO: Convert from the stash snippet  Ones that matter: export TITUS_REGISTRY=\"registry.hub.docker.com\",   Set env var TITUS_REGISTRY to export TITUS_REGISTRY=\"registry.hub.docker.com\"  Changed the pause image to use to imageName = \"kubernetes/pause:latest\"", 
+            "text": "dpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb  We use  --force-overwrite  flag to ensure all files are updated.  Run  sudo /apps/titus-vpc-driver/bin/run  to start the driver. Since all of the other\ncomponents are in the host network, it should be fine to run it from the host.", 
             "title": "titus-vpc-driver"
         }, 
         {
+            "location": "/install/agent/#titus-metadata-service", 
+            "text": "dpkg -i titus-metadata-service_0.0.1-1_all.deb  Run  sudo /apps/titus-metadata-service/bin/run  to start the proxy", 
+            "title": "titus-metadata-service"
+        }, 
+        {
             "location": "/test/batch/", 
-            "text": "Testing the most basic job\n\n\nFrom the gateway node\n\n\ncurl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{\n   \napplicationName\n: \nubuntu\n,\n   \nversion\n: \nlatest\n,\n   \ntype\n: \nbatch\n,\n   \nentryPoint\n: \nsleep 10\n,\n   \ninstances\n: 1,\n   \ncpu\n: 1,\n   \nmemory\n: 1024,\n   \ndisk\n: 10000,\n   \nnetworkMbps\n: 128\n }' 'http://localhost:7001/api/v2/jobs'", 
+            "text": "Testing the most basic job\n\n\nFrom the gateway node\n\n\ncurl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{\n   \napplicationName\n: \nubuntu\n,\n   \nversion\n: \nlatest\n,\n   \ntype\n: \nbatch\n,\n   \nentryPoint\n: \nsleep 10\n,\n   \ninstances\n: 1,\n   \ncpu\n: 1,\n   \nmemory\n: 1024,\n   \ndisk\n: 1000,\n   \nnetworkMbps\n: 128\n }' 'http://localhost:7001/api/v2/jobs'", 
             "title": "Basic batch task"
         }, 
         {
             "location": "/test/batch/#testing-the-most-basic-job", 
-            "text": "From the gateway node  curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{\n    applicationName :  ubuntu ,\n    version :  latest ,\n    type :  batch ,\n    entryPoint :  sleep 10 ,\n    instances : 1,\n    cpu : 1,\n    memory : 1024,\n    disk : 10000,\n    networkMbps : 128\n }' 'http://localhost:7001/api/v2/jobs'", 
+            "text": "From the gateway node  curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{\n    applicationName :  ubuntu ,\n    version :  latest ,\n    type :  batch ,\n    entryPoint :  sleep 10 ,\n    instances : 1,\n    cpu : 1,\n    memory : 1024,\n    disk : 1000,\n    networkMbps : 128\n }' 'http://localhost:7001/api/v2/jobs'", 
             "title": "Testing the most basic job"
         }, 
         {
