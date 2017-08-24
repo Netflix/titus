@@ -1,3 +1,20 @@
+# Creating a Titus agent launch configuration and ASG
+When Spinnaker creates agent deployments, it creates the following user data in the launch config for an ASG. The
+agent processes depend on these being right.
+```
+NETFLIX_ACCOUNT="test"
+NETFLIX_ACCOUNT_TYPE="main"
+NETFLIX_ENVIRONMENT="test"
+NETFLIX_APP="titusagent"
+NETFLIX_APPUSER="titusagent"
+NETFLIX_STACK="mainvpc"
+NETFLIX_CLUSTER="titusagent-mainvpc-m4.4xlarge.2"
+NETFLIX_DETAIL="m4.4xlarge.2"
+NETFLIX_AUTO_SCALE_GROUP="titusagent-mainvpc-m4.4xlarge.2-v004"
+NETFLIX_LAUNCH_CONFIG="titusagent-mainvpc-m4.4xlarge.2-v004-07202017195940"
+EC2_REGION="eu-west-1"
+```
+
 # Upgrade Ubuntu
 ```
 sudo su
