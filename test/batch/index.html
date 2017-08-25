@@ -88,6 +88,12 @@
     <li class="toctree-l3"><a href="#testing-the-most-basic-job">Testing the most basic job</a></li>
     
 
+    <li class="toctree-l3"><a href="#testing-the-most-basic-job_1">Testing the most basic job</a></li>
+    
+
+    <li class="toctree-l3"><a href="#testing-the-metadataservice-without-executor-or-vpc-driver">Testing the metadataservice without executor or VPC driver</a></li>
+    
+
     </ul>
                 </li>
     </ul>
@@ -137,8 +143,8 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="testing-the-most-basic-job">Testing the most basic job</h1>
-<p>From the gateway node</p>
+                <p>To send requests, curl jobs to the gateway node</p>
+<h1 id="testing-the-most-basic-job">Testing the most basic job</h1>
 <pre><code>curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
    &quot;applicationName&quot;: &quot;ubuntu&quot;,
    &quot;version&quot;: &quot;latest&quot;,
@@ -150,6 +156,48 @@
    &quot;disk&quot;: 1000,
    &quot;networkMbps&quot;: 128
  }' 'http://localhost:7001/api/v2/jobs'
+</code></pre>
+
+<h1 id="testing-the-most-basic-job_1">Testing the most basic job</h1>
+<pre><code>curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
+   &quot;applicationName&quot;: &quot;ubuntu&quot;,
+   &quot;version&quot;: &quot;latest&quot;,
+   &quot;type&quot;: &quot;batch&quot;,
+   &quot;entryPoint&quot;: &quot;sleep 10&quot;,
+   &quot;instances&quot;: 1,
+   &quot;cpu&quot;: 1,
+   &quot;memory&quot;: 1024,
+   &quot;disk&quot;: 1000,
+   &quot;networkMbps&quot;: 128,
+   &quot;iamProfile&quot;: &quot;arn:aws:iam::ACCOUNTID:role/IAMPROFILENAME&quot; 
+ }' 'http://localhost:7001/api/v2/jobs'
+</code></pre>
+
+<h1 id="testing-the-metadataservice-without-executor-or-vpc-driver">Testing the metadataservice without executor or VPC driver</h1>
+<p>There is a a testing flag you can add to the metadata-service run command <code>export ALLOW_REMOTE_IP_OVERRIDE=true</code>
+which will allow you to override the connection IP used to lookup the container doing a metadata request. If you
+start two containers with the below labels:</p>
+<pre><code>sudo docker run -d \
+  --label TITUS_TASK_INSTANCE_ID=abf580cb-740b-4ab0-a46a-ebb5d590dbfe \
+  --label ec2.iam.role=arn:aws:iam::ACCOUNTID:role/titusappwiths3InstanceProfile \
+  --label titus.net.ipv4=1.1.1.1 \
+  --label titus.task_id=Titus-15125145-worker-0-52 \
+  --label titus.vpc.ipv4=1.1.1.1 \
+  ubuntu:latest sleep 1000000
+
+sudo docker run -d \
+  --label TITUS_TASK_INSTANCE_ID=abf580cb-740b-4ab0-a46a-ebb5d590dbfe \
+  --label ec2.iam.role=arn:aws:iam::ACCOUNTID:role/titusappnos3InstanceProfile \
+  --label titus.net.ipv4=1.1.1.2 \
+  --label titus.task_id=Titus-15125145-worker-0-52 \
+  --label titus.vpc.ipv4=1.1.1.2 \
+  ubuntu:latest sleep 1000000
+</code></pre>
+
+<p>You can test the IAM support by running curl with a special header:</p>
+<pre><code>curl --header &quot;remote-ip:1.1.1.1&quot; http://10.11.10.11:9999/latest/meta-data/iam/security-credentials/titusappwiths3InstanceProfile
+
+curl --header &quot;remote-ip:1.1.1.2&quot; http://10.11.10.11:9999/latest/meta-data/iam/security-credentials/titusappnos3InstanceProfile
 </code></pre>
               
             </div>
