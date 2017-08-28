@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../../img/favicon.ico">
-  <title>Scheduler and Gateway - Titus</title>
+  <title>Master and Gateway - Titus</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
@@ -17,7 +17,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Scheduler and Gateway";
+    var mkdocs_page_name = "Master and Gateway";
     var mkdocs_page_input_path = "install/master.md";
     var mkdocs_page_url = "/install/master/";
   </script>
@@ -67,7 +67,7 @@
                 </li>
                 <li class=" current">
                     
-    <a class="current" href="./">Scheduler and Gateway</a>
+    <a class="current" href="./">Master and Gateway</a>
     <ul class="subnav">
             
     <li class="toctree-l3"><a href="#master">Master</a></li>
@@ -127,7 +127,7 @@
         
       
     
-    <li>Scheduler and Gateway</li>
+    <li>Master and Gateway</li>
     <li class="wy-breadcrumbs-aside">
       
         <a href="https://github.com/Netflix/titus/edit/master/docs/install/master.md"
@@ -141,14 +141,55 @@
             <div class="section">
               
                 <h1 id="master">Master</h1>
+<p>Run as root</p>
+<ul>
+<li>install java8</li>
+<li><code>sudo apt-get update</code></li>
+<li><code>sudo apt-get install openjdk-8-jdk</code></li>
+<li>install mesos</li>
+<li>Copy <code>titus-server-master/build/distributions/titus-server-master&lt;version&gt;.deb</code> to server</li>
+<li>Run <code>dpkg -i titus-server-master&lt;version&gt;.deb</code> to install the debian</li>
+</ul>
+<p>Run as Ubuntu user</p>
+<ul>
+<li>Create <code>~/titus.properties</code> with the properties:</li>
+</ul>
+<pre><code>mantis.master.apiport=7100
+mantis.master.apiProxyPort=7001
+mantis.master.grpcServer.port=7104
+
+mantis.zookeeper.connectString=&lt;zookeeperIp&gt;
+mantis.zookeeper.root=/titus/main
+
+mesos.master.location=&lt;mesosMasterIp&gt;:&lt;mesosMasterPort&gt;
+
+titus.master.capacityManagement.instanceTypes.0.name=DEFAULT
+titus.master.capacityManagement.instanceTypes.0.minSize=1
+
+# Critical tier (0)
+titus.master.capacityManagement.tiers.0.instanceTypes=m4.4xlarge
+titus.master.capacityManagement.tiers.0.buffer=0.3
+
+# Flex tier (1)
+titus.master.capacityManagement.tiers.1.instanceTypes=m4.xlarge
+titus.master.capacityManagement.tiers.1.buffer=0.3
+
+titus.master.job.security.groups.default.list=&lt;DEFAULT_SG&gt;
+mantis.master.framework.name=TitusFramework
+
+</code></pre>
+
+<ul>
+<li>Start server with <code>./opt/titus-server-master/bin/titus-server-master -p ~/titus.properties | tee ~/titus.log</code></li>
+</ul>
 <h1 id="gateway">Gateway</h1>
 <p>Run as root</p>
 <ul>
 <li>install java8</li>
 <li><code>sudo apt-get update</code></li>
 <li><code>sudo apt-get install openjdk-8-jdk</code></li>
-<li>Copy titus-server-gateway/build/distribute/titus-server-gateway_<version>.deb to server</li>
-<li>Run <code>dpkg -i titus-server-gateway_&lt;version&gt;.deb</code></li>
+<li>Copy <code>titus-server-gateway/build/distributions/titus-server-gateway_&lt;version&gt;.deb</code> to server</li>
+<li>Run <code>dpkg -i titus-server-gateway_&lt;version&gt;.deb</code> to install the debian</li>
 </ul>
 <p>Run as Ubuntu user</p>
 <ul>

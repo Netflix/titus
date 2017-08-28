@@ -67,7 +67,7 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../master/">Scheduler and Gateway</a>
+    <a class="" href="../master/">Master and Gateway</a>
                 </li>
                 <li class=" current">
                     
@@ -180,7 +180,8 @@ shutdown -r now
 </code></pre>
 
 <h1 id="install-docker">Install Docker</h1>
-<p>Install docker as instructed <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository">here</a></p>
+<p>Install docker as instructed <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository">here</a>
+- Update <code>/etc/default/docker/daemon.json</code> to include <code>{"iptables": false}</code> and restart the Docker daemon.</p>
 <h1 id="mesos-slave">Mesos-slave</h1>
 <p>Ran mesos-slave with Docker image instead of installing natively.
 - TODO - need to do this without Docker
@@ -193,6 +194,10 @@ shutdown -r now
 <ul>
 <li>dpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb</li>
 <li>We use <code>--force-overwrite</code> flag to ensure all files are updated.</li>
+<li>Setup networking so that interface names use the legacy <code>eth</code> prefix convention.</li>
+<li>Add <code>net.ifnames=0</code> to GRUB_CMDLINE_LINUX= in <code>/etc/default/grub</code> and then run <code>sudo update-grub</code>.</li>
+<li>Remove the <code>/etc/udev/rules.d/70-persistent-net.rules</code> file and then run <code>sudo reboot</code>.</li>
+<li>After reboot, the default interface should be named <code>eth0</code> instead of the previous <code>ens3</code>.</li>
 <li>Run <code>sudo /apps/titus-vpc-driver/bin/run</code> to start the driver. Since all of the other
 components are in the host network, it should be fine to run it from the host.</li>
 </ul>
@@ -211,7 +216,7 @@ components are in the host network, it should be fine to run it from the host.</
         <a href="../../test/batch/" class="btn btn-neutral float-right" title="Basic batch task">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../master/" class="btn btn-neutral" title="Scheduler and Gateway"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../master/" class="btn btn-neutral" title="Master and Gateway"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
