@@ -26,6 +26,7 @@ shutdown -r now
 
 # Install Docker
 Install docker as instructed [here](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository)
+- Update `/etc/default/docker/daemon.json` to include `{"iptables": false}` and restart the Docker daemon.
 
 # Mesos-slave
 Ran mesos-slave with Docker image instead of installing natively.
