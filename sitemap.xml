@@ -26,6 +26,12 @@
     </url>
         
     <url>
+     <loc>/install/prereqs-amazon/</loc>
+     <lastmod>2017-08-28</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
      <loc>/install/master/</loc>
      <lastmod>2017-08-28</lastmod>
      <changefreq>daily</changefreq>
