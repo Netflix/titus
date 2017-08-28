@@ -10,12 +10,12 @@ For inbound
 - From titusmaster-mainvpc security group, ALL TCP, All ICMP
 - From anywhere (including Internet), SSH
 
-<img src="../../images/titusmaster-mainvpc-secgroup.png-inbound.png" />
+<img src="../../images/titusmaster-mainvpc-secgroup-inbound.png" />
 
 For outbound
 - All traffic
 
-<img src="../../images/titusmaster-mainvpc-secgroup.png-outbound.png" />
+<img src="../../images/titusmaster-mainvpc-secgroup-outbound.png" />
 
 
 
