@@ -36,6 +36,10 @@ Ran mesos-slave with Docker image instead of installing natively.
 - dpkg -i titus-agent_0.0.1-1_all.deb
 
 # titus-vpc-driver
+- Setup networking so that interface names use the legacy `eth` prefix convention.
+  - Add `net.ifnames=0` to GRUB_CMDLINE_LINUX= in `/etc/default/grub` and then run `sudo update-grub`.
+  - Remove the `/etc/udev/rules.d/70-persistent-net.rules` file and then run `sudo reboot`.
+  - After reboot, the default interface should be named `eth0` instead of the previous `ens3`.
 - dpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb
   - We use `--force-overwrite` flag to ensure all files are updated.
 - Run `sudo /apps/titus-vpc-driver/bin/run` to start the driver. Since all of the other
