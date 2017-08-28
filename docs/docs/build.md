@@ -29,4 +29,25 @@ make build
 ./gradlew clean buildDeb
 ```
 
+# Titus Api Definitions
+```
+git clone https://github.com/Netflix/titus-api-definitions.git
+cd titus-api-definitions
+./gradlew clean build
+```
+
+# Titus Master
+```
+git clone https://github.com/Netflix/titus-control-plane.git
+cd titus-control-plane
+./gradlew clean buildDeb -PidlLocal
+```
+
+# Titus Gateway
+```
+git clone https://github.com/Netflix/titus-control-plane.git
+cd titus-control-plane
+./gradlew clean buildDeb -PidlLocal
+```
+
 This will produce product three deb files under build/distributions
