@@ -31,11 +31,7 @@ Dockerhub and suggest this or the EC2 Container Registry Service (ECR).
 
 # AWS Configuration
 
-- IAM Role and security group for Titus
-  - TODO: specify what is required, for now tested with wide open security group
-  and ``*`` IAM role. 
-- IAM Role and security group for app container
-  - TODO: Need to specify a test sec group and IAM role
+IAM Role and security group for Titus are [documented](prereqs-amazon).
 
 # Optional
 We use Cassandra as our persistence store for Titus master. For OSS, we
