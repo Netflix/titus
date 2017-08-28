@@ -72,12 +72,12 @@
         }, 
         {
             "location": "/install/prereqs-amazon/", 
-            "text": "Creating security groups\n\n\nTwo security groups are needed. We are naming them 'titusapp' and 'titusmaster-mainvpc':", 
+            "text": "Creating security groups\n\n\nTwo security groups are needed. We are naming them \ntitusapp\n and \ntitusmaster-mainvpc\n:", 
             "title": "Amazon Prereqs"
         }, 
         {
             "location": "/install/prereqs-amazon/#creating-security-groups", 
-            "text": "Two security groups are needed. We are naming them 'titusapp' and 'titusmaster-mainvpc':", 
+            "text": "Two security groups are needed. We are naming them  titusapp  and  titusmaster-mainvpc :", 
             "title": "Creating security groups"
         }, 
         {
