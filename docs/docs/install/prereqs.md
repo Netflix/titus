@@ -14,6 +14,16 @@ Links
 - IPOFMESOS:5050
 - IPOFMESOS:5050/slaves
 
+We run a high availability configuration of Mesos and Zookeeper. You can run this
+on a node using Docker in a non-production mode by using:
+
+```
+sudo docker run -d -p 2181:2181 --name zookeeper jplock/zookeeper:3.4.10
+sudo docker run -d -p 5050:5050 --name mesomaster --link zookeeper:zookeeper mesosphere/mesos-master:1.0.1-2.0.93.ubuntu1404 mesos-master --zk=zk://zookeeper:2181/titus/mainvpc/mesos --work_dir=/tmp/master --log_dir=/var/log/mesos --logging_level=INFO --quorum=1
+```
+
+You can see the key ports for these are 2181 (Zookeeper) and 5050 (Mesos).
+
 # Spinnaker
 We deploy Titus via Spinnaker to an EC2 cloud provider. Eventually we may
 release these pipelines, but for now we suggest direct deployments using
