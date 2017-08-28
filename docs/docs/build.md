@@ -50,4 +50,5 @@ cd titus-control-plane
 ./gradlew clean buildDeb -PidlLocal
 ```
 
-This will produce product three deb files under build/distributions
+**Note:** the `titus-api-definitions` git repo must be in the same root folder as `titus-control-plane` git repo in order to build the master and gateway components with `-PidlLocal`.
+Running all builds will produce 5 debs under the build/distributions folder in each component.

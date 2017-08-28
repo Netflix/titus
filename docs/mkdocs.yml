@@ -13,4 +13,4 @@ pages:
 - 'Testing':
   - 'Basic batch task': test/batch.md
 - 'FAQ': faq.md
-theme: readthedocs
+theme: material
