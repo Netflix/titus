@@ -10,10 +10,6 @@ We run all other tiers of Titus on Trusty.
 - Zookeeper 3.4.8 (with Exhibitor 1.5.5)
 - Mesos 1.0.1
 
-Links
-- IPOFMESOS:5050
-- IPOFMESOS:5050/slaves
-
 We run a high availability configuration of Mesos and Zookeeper. You can run this
 on a node using Docker in a non-production mode by using:
 

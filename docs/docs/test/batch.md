@@ -60,3 +60,7 @@ curl --header "remote-ip:1.1.1.1" http://10.11.10.11:9999/latest/meta-data/iam/s
 
 curl --header "remote-ip:1.1.1.2" http://10.11.10.11:9999/latest/meta-data/iam/security-credentials/titusappnos3InstanceProfile
 ```
+
+# Debugging Mesos
+- IPOFMESOS:5050
+- IPOFMESOS:5050/slaves
