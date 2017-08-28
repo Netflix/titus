@@ -7,6 +7,7 @@ pages:
 - 'Building the Code': build.md
 - 'Deployment':
   - 'Prereqs': install/prereqs.md
+  - 'Amazon Prereqs': install/prereqs-amazon.md
   - 'Master and Gateway': install/master.md
   - 'Agent': install/agent.md
 - 'Testing':
