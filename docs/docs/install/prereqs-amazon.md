@@ -4,7 +4,9 @@ Two security groups are needed. We are naming them `titusapp` and `titusmaster-m
 
 <img src="../../images/secgroups.png" />
 
-# For the infrastructure security group (titusmaster-mainvpc)
+## Infrastructure security group
+
+This is for the `titusmaster-mainvpc` security group
 
 For inbound
 - From titusmaster-mainvpc security group, ALL TCP, All ICMP
@@ -17,7 +19,14 @@ For outbound
 
 <img src="../../images/titusmaster-mainvpc-secgroup-outbound.png" />
 
+## App security group
 
+This is for the `titusapp` 
+
+For inbound and outbound
+- Up to your application needs
+
+# Creating IAM Roles
 
 
 
