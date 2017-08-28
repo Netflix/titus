@@ -2,17 +2,17 @@
     "docs": [
         {
             "location": "/", 
-            "text": "Titus", 
+            "text": "Titus\n\n\nTitus is the Netflix Cloud Container Runtime that manages containers and provides integrations to the infrastructure ecosystem.", 
             "title": "Introduction"
         }, 
         {
             "location": "/#titus", 
-            "text": "", 
+            "text": "Titus is the Netflix Cloud Container Runtime that manages containers and provides integrations to the infrastructure ecosystem.", 
             "title": "Titus"
         }, 
         {
             "location": "/build/", 
-            "text": "Agent\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-agent.git\ncd titus-agent\nmake build\n./gradlew clean buildDeb\n\n\n\n\nVPC Driver\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-vpc-driver.git\ncd titus-vpc-driver\ngo build\n./gradlew clean buildDeb\n\n\n\n\nMetadata Service\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-metadata-service.git\ncd titus-metadata-service\nmake build\n./gradlew clean buildDeb\n\n\n\n\nTitus Api Definitions\n\n\ngit clone https://github.com/Netflix/titus-api-definitions.git\ncd titus-api-definitions\n./gradlew clean build\n\n\n\n\nTitus Master\n\n\ngit clone https://github.com/Netflix/titus-control-plane.git\ncd titus-control-plane\n./gradlew clean buildDeb -PidlLocal\n\n\n\n\nTitus Gateway\n\n\ngit clone https://github.com/Netflix/titus-control-plane.git\ncd titus-control-plane\n./gradlew clean buildDeb -PidlLocal\n\n\n\n\nThis will produce product three deb files under build/distributions", 
+            "text": "Agent\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-agent.git\ncd titus-agent\nmake build\n./gradlew clean buildDeb\n\n\n\n\nVPC Driver\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-vpc-driver.git\ncd titus-vpc-driver\ngo build\n./gradlew clean buildDeb\n\n\n\n\nMetadata Service\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-metadata-service.git\ncd titus-metadata-service\nmake build\n./gradlew clean buildDeb\n\n\n\n\nTitus Api Definitions\n\n\ngit clone https://github.com/Netflix/titus-api-definitions.git\ncd titus-api-definitions\n./gradlew clean build\n\n\n\n\nTitus Master\n\n\ngit clone https://github.com/Netflix/titus-control-plane.git\ncd titus-control-plane\n./gradlew clean buildDeb -PidlLocal\n\n\n\n\nTitus Gateway\n\n\ngit clone https://github.com/Netflix/titus-control-plane.git\ncd titus-control-plane\n./gradlew clean buildDeb -PidlLocal\n\n\n\n\nNote:\n the \ntitus-api-definitions\n git repo must be in the same root folder as \ntitus-control-plane\n git repo in order to build the master and gateway components with \n-PidlLocal\n.\nRunning all builds will produce 5 debs under the build/distributions folder in each component.", 
             "title": "Building the Code"
         }, 
         {
@@ -42,7 +42,7 @@
         }, 
         {
             "location": "/build/#titus-gateway", 
-            "text": "git clone https://github.com/Netflix/titus-control-plane.git\ncd titus-control-plane\n./gradlew clean buildDeb -PidlLocal  This will produce product three deb files under build/distributions", 
+            "text": "git clone https://github.com/Netflix/titus-control-plane.git\ncd titus-control-plane\n./gradlew clean buildDeb -PidlLocal  Note:  the  titus-api-definitions  git repo must be in the same root folder as  titus-control-plane  git repo in order to build the master and gateway components with  -PidlLocal .\nRunning all builds will produce 5 debs under the build/distributions folder in each component.", 
             "title": "Titus Gateway"
         }, 
         {
