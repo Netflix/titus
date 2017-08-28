@@ -7,7 +7,7 @@ pages:
 - 'Building the Code': build.md
 - 'Deployment':
   - 'Prereqs': install/prereqs.md
-  - 'Scheduler and Gateway': install/master.md
+  - 'Master and Gateway': install/master.md
   - 'Agent': install/agent.md
 - 'Testing':
   - 'Basic batch task': test/batch.md
