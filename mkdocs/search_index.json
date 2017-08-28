@@ -72,13 +72,18 @@
         }, 
         {
             "location": "/install/prereqs-amazon/", 
-            "text": "Creating security groups\n\n\nTwo security groups are needed. We are naming them \ntitusapp\n and \ntitusmaster-mainvpc\n:", 
+            "text": "Creating security groups\n\n\nTwo security groups are needed. We are naming them \ntitusapp\n and \ntitusmaster-mainvpc\n:\n\n\n\n\nFor the infrastructure security group (titusmaster-mainvpc)\n\n\nFor inbound\n- From titusmaster-mainvpc security group, ALL TCP, All ICMP\n- From anywhere (including Internet), SSH\n\n\n\n\nFor outbound\n- All traffic", 
             "title": "Amazon Prereqs"
         }, 
         {
             "location": "/install/prereqs-amazon/#creating-security-groups", 
             "text": "Two security groups are needed. We are naming them  titusapp  and  titusmaster-mainvpc :", 
             "title": "Creating security groups"
+        }, 
+        {
+            "location": "/install/prereqs-amazon/#for-the-infrastructure-security-group-titusmaster-mainvpc", 
+            "text": "For inbound\n- From titusmaster-mainvpc security group, ALL TCP, All ICMP\n- From anywhere (including Internet), SSH   For outbound\n- All traffic", 
+            "title": "For the infrastructure security group (titusmaster-mainvpc)"
         }, 
         {
             "location": "/install/master/", 

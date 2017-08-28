@@ -73,6 +73,9 @@
     <li class="toctree-l3"><a href="#creating-security-groups">Creating security groups</a></li>
     
 
+    <li class="toctree-l3"><a href="#for-the-infrastructure-security-group-titusmaster-mainvpc">For the infrastructure security group (titusmaster-mainvpc)</a></li>
+    
+
     </ul>
                 </li>
                 <li class="">
@@ -144,6 +147,14 @@
                 <h1 id="creating-security-groups">Creating security groups</h1>
 <p>Two security groups are needed. We are naming them <code>titusapp</code> and <code>titusmaster-mainvpc</code>:</p>
 <p><img src="../../images/secgroups.png" /></p>
+<h1 id="for-the-infrastructure-security-group-titusmaster-mainvpc">For the infrastructure security group (titusmaster-mainvpc)</h1>
+<p>For inbound
+- From titusmaster-mainvpc security group, ALL TCP, All ICMP
+- From anywhere (including Internet), SSH</p>
+<p><img src="../../images/titusmaster-mainvpc-secgroup.png-inbound.png" /></p>
+<p>For outbound
+- All traffic</p>
+<p><img src="../../images/titusmaster-mainvpc-secgroup.png-outbound.png" /></p>
               
             </div>
           </div>
