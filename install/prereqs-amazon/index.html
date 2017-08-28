@@ -83,6 +83,14 @@
 
     <li class="toctree-l3"><a href="#creating-iam-roles">Creating IAM Roles</a></li>
     
+        <ul>
+        
+            <li><a class="toctree-l4" href="#infrastructure-iam-role">Infrastructure IAM Role</a></li>
+        
+            <li><a class="toctree-l4" href="#app-iam-roles">App IAM Roles</a></li>
+        
+        </ul>
+    
 
     </ul>
                 </li>
@@ -169,6 +177,40 @@
 <p>For inbound and outbound
 - Up to your application needs</p>
 <h1 id="creating-iam-roles">Creating IAM Roles</h1>
+<p>Three IAM roles are needed. We are naming them `titusmasterInstanceProfile' and 'titusappwiths3InstanceProfile'
+and 'titusappnos3InstanceProfile'.</p>
+<p><img src="../../images/iamroles.png" /></p>
+<h2 id="infrastructure-iam-role">Infrastructure IAM Role</h2>
+<p>For now, we are using a wide open IAM role. We can refine this later.</p>
+<p><img src="../../images/titusmasterinstanceprofilepolicy.png" /></p>
+<h2 id="app-iam-roles">App IAM Roles</h2>
+<p>You need to allow this IAM Role to be assumed into via the Infrastructure Role. You can do this by setting
+up trusted relationships. It should look like this:</p>
+<p><img src="../../images/titusappinstanceprofile-trust.png" /></p>
+<p>The Trust relationship should look like:</p>
+<pre><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Principal&quot;: {
+        &quot;Service&quot;: &quot;ec2.amazonaws.com&quot;
+      },
+      &quot;Action&quot;: &quot;sts:AssumeRole&quot;
+    },
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Principal&quot;: {
+        &quot;AWS&quot;: &quot;arn:aws:iam::ACCOUNTID:role/titusmasterInstanceProfile&quot;
+      },
+      &quot;Action&quot;: &quot;sts:AssumeRole&quot;
+    }
+  ]
+}
+</code></pre>
+
+<p>For permissions, pick two sets of permissions that matter to your apps. We created one with S3 read access
+and one without to be able to test the IAM role support feature.</p>
               
             </div>
           </div>
