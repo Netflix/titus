@@ -72,8 +72,16 @@
             
     <li class="toctree-l3"><a href="#creating-security-groups">Creating security groups</a></li>
     
+        <ul>
+        
+            <li><a class="toctree-l4" href="#infrastructure-security-group">Infrastructure security group</a></li>
+        
+            <li><a class="toctree-l4" href="#app-security-group">App security group</a></li>
+        
+        </ul>
+    
 
-    <li class="toctree-l3"><a href="#for-the-infrastructure-security-group-titusmaster-mainvpc">For the infrastructure security group (titusmaster-mainvpc)</a></li>
+    <li class="toctree-l3"><a href="#creating-iam-roles">Creating IAM Roles</a></li>
     
 
     </ul>
@@ -147,7 +155,8 @@
                 <h1 id="creating-security-groups">Creating security groups</h1>
 <p>Two security groups are needed. We are naming them <code>titusapp</code> and <code>titusmaster-mainvpc</code>:</p>
 <p><img src="../../images/secgroups.png" /></p>
-<h1 id="for-the-infrastructure-security-group-titusmaster-mainvpc">For the infrastructure security group (titusmaster-mainvpc)</h1>
+<h2 id="infrastructure-security-group">Infrastructure security group</h2>
+<p>This is for the <code>titusmaster-mainvpc</code> security group</p>
 <p>For inbound
 - From titusmaster-mainvpc security group, ALL TCP, All ICMP
 - From anywhere (including Internet), SSH</p>
@@ -155,6 +164,11 @@
 <p>For outbound
 - All traffic</p>
 <p><img src="../../images/titusmaster-mainvpc-secgroup-outbound.png" /></p>
+<h2 id="app-security-group">App security group</h2>
+<p>This is for the <code>titusapp</code> </p>
+<p>For inbound and outbound
+- Up to your application needs</p>
+<h1 id="creating-iam-roles">Creating IAM Roles</h1>
               
             </div>
           </div>

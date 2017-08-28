@@ -12,7 +12,7 @@
         }, 
         {
             "location": "/build/", 
-            "text": "Agent\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-agent.git\ncd titus-agent\nmake build\n./gradlew clean buildDeb\n\n\n\n\nVPC Driver\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-vpc-driver.git\ncd titus-vpc-driver\ngo build\n./gradlew clean buildDeb\n\n\n\n\nMetadata Service\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-metadata-service.git\ncd titus-metadata-service\nmake build\n./gradlew clean buildDeb\n\n\n\n\nThis will produce product three deb files under build/distributions", 
+            "text": "Agent\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-agent.git\ncd titus-agent\nmake build\n./gradlew clean buildDeb\n\n\n\n\nVPC Driver\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-vpc-driver.git\ncd titus-vpc-driver\ngo build\n./gradlew clean buildDeb\n\n\n\n\nMetadata Service\n\n\nmkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-metadata-service.git\ncd titus-metadata-service\nmake build\n./gradlew clean buildDeb\n\n\n\n\nTitus Api Definitions\n\n\ngit clone https://github.com/Netflix/titus-api-definitions.git\ncd titus-api-definitions\n./gradlew clean build\n\n\n\n\nTitus Master\n\n\ngit clone https://github.com/Netflix/titus-control-plane.git\ncd titus-control-plane\n./gradlew clean buildDeb -PidlLocal\n\n\n\n\nTitus Gateway\n\n\ngit clone https://github.com/Netflix/titus-control-plane.git\ncd titus-control-plane\n./gradlew clean buildDeb -PidlLocal\n\n\n\n\nThis will produce product three deb files under build/distributions", 
             "title": "Building the Code"
         }, 
         {
@@ -27,12 +27,27 @@
         }, 
         {
             "location": "/build/#metadata-service", 
-            "text": "mkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-metadata-service.git\ncd titus-metadata-service\nmake build\n./gradlew clean buildDeb  This will produce product three deb files under build/distributions", 
+            "text": "mkdir -p $GOPATH/src/github.com/Netflix\ncd $GOPATH/src/github.com/Netflix\ngit clone https://github.com/Netflix/titus-metadata-service.git\ncd titus-metadata-service\nmake build\n./gradlew clean buildDeb", 
             "title": "Metadata Service"
         }, 
         {
+            "location": "/build/#titus-api-definitions", 
+            "text": "git clone https://github.com/Netflix/titus-api-definitions.git\ncd titus-api-definitions\n./gradlew clean build", 
+            "title": "Titus Api Definitions"
+        }, 
+        {
+            "location": "/build/#titus-master", 
+            "text": "git clone https://github.com/Netflix/titus-control-plane.git\ncd titus-control-plane\n./gradlew clean buildDeb -PidlLocal", 
+            "title": "Titus Master"
+        }, 
+        {
+            "location": "/build/#titus-gateway", 
+            "text": "git clone https://github.com/Netflix/titus-control-plane.git\ncd titus-control-plane\n./gradlew clean buildDeb -PidlLocal  This will produce product three deb files under build/distributions", 
+            "title": "Titus Gateway"
+        }, 
+        {
             "location": "/install/prereqs/", 
-            "text": "Required\n\n\nLinux\n\n\nWe currently run our agents on Ubuntu Xenial (16.04.2) with kernel 4.9.34 with\npatches for EFS. Until Titus open source supports EFS, it is likely that Xenial\nand a 4.9 kernel is sufficient.\n\n\nWe run all other tiers of Titus on Trusty.\n\n\nMesos and Zookeeper\n\n\n\n\nZookeeper 3.4.8 (with Exhibitor 1.5.5)\n\n\nMesos 1.0.1\n\n\n\n\nWe run a high availability configuration of Mesos and Zookeeper. You can run this\non a node using Docker in a non-production mode by using:\n\n\nsudo docker run -d -p 2181:2181 --name zookeeper jplock/zookeeper:3.4.10\nsudo docker run -d -p 5050:5050 --name mesomaster --link zookeeper:zookeeper mesosphere/mesos-master:1.0.1-2.0.93.ubuntu1404 mesos-master --zk=zk://zookeeper:2181/titus/mainvpc/mesos --work_dir=/tmp/master --log_dir=/var/log/mesos --logging_level=INFO --quorum=1\n\n\n\n\nYou can see the key ports for these are 2181 (Zookeeper) and 5050 (Mesos).\n\n\nSpinnaker\n\n\nWe deploy Titus via Spinnaker to an EC2 cloud provider. Eventually we may\nrelease these pipelines, but for now we suggest direct deployments using\nthe AWS EC2 console.\n\n\nDocker Registry\n\n\nWe operate a docker registry based on Docker Distribution. We have tested with\nDockerhub and suggest this or the EC2 Container Registry Service (ECR).\n\n\nAWS Configuration\n\n\n\n\nIAM Role and security group for Titus\n\n\nTODO: specify what is required, for now tested with wide open security group\n  and \n*\n IAM role. \n\n\nIAM Role and security group for app container\n\n\nTODO: Need to specify a test sec group and IAM role\n\n\n\n\nOptional\n\n\nWe use Cassandra as our persistence store for Titus master. For OSS, we\ncurrent suggest the in-memory store.\n\n\nWe have integration with Eureka to disable agents and monitor health. For now,\nthis is not part of the OSS implementation.\n\n\nWe write all task state updates to Elastic Search for operational insight. For\nnow, this is not part of the OSS implementation.\n\n\nWe use Edda to understand which ASG's are available in Titus. For now, this is\nnot part of the OSS implementation.", 
+            "text": "Required\n\n\nLinux\n\n\nWe currently run our agents on Ubuntu Xenial (16.04.2) with kernel 4.9.34 with\npatches for EFS. Until Titus open source supports EFS, it is likely that Xenial\nand a 4.9 kernel is sufficient.\n\n\nWe run all other tiers of Titus on Trusty.\n\n\nMesos and Zookeeper\n\n\n\n\nZookeeper 3.4.8 (with Exhibitor 1.5.5)\n\n\nMesos 1.0.1\n\n\n\n\nWe run a high availability configuration of Mesos and Zookeeper. You can run this\non a node using Docker in a non-production mode by using:\n\n\nsudo docker run -d -p 2181:2181 --name zookeeper jplock/zookeeper:3.4.10\nsudo docker run -d -p 5050:5050 --name mesomaster mesosphere/mesos-master:1.0.1-2.0.93.ubuntu1404 mesos-master --zk=zk://localhost:2181/titus/mainvpc/mesos --work_dir=/tmp/master --log_dir=/var/log/mesos --logging_level=INFO --quorum=1\n\n\n\n\nYou can see the key ports for these are 2181 (Zookeeper) and 5050 (Mesos).\n\n\nSpinnaker\n\n\nWe deploy Titus via Spinnaker to an EC2 cloud provider. Eventually we may\nrelease these pipelines, but for now we suggest direct deployments using\nthe AWS EC2 console.\n\n\nDocker Registry\n\n\nWe operate a docker registry based on Docker Distribution. We have tested with\nDockerhub and suggest this or the EC2 Container Registry Service (ECR).\n\n\nAWS Configuration\n\n\n\n\nIAM Role and security group for Titus\n\n\nTODO: specify what is required, for now tested with wide open security group\n  and \n*\n IAM role. \n\n\nIAM Role and security group for app container\n\n\nTODO: Need to specify a test sec group and IAM role\n\n\n\n\nOptional\n\n\nWe use Cassandra as our persistence store for Titus master. For OSS, we\ncurrent suggest the in-memory store.\n\n\nWe have integration with Eureka to disable agents and monitor health. For now,\nthis is not part of the OSS implementation.\n\n\nWe write all task state updates to Elastic Search for operational insight. For\nnow, this is not part of the OSS implementation.\n\n\nWe use Edda to understand which ASG's are available in Titus. For now, this is\nnot part of the OSS implementation.", 
             "title": "Prereqs"
         }, 
         {
@@ -47,7 +62,7 @@
         }, 
         {
             "location": "/install/prereqs/#mesos-and-zookeeper", 
-            "text": "Zookeeper 3.4.8 (with Exhibitor 1.5.5)  Mesos 1.0.1   We run a high availability configuration of Mesos and Zookeeper. You can run this\non a node using Docker in a non-production mode by using:  sudo docker run -d -p 2181:2181 --name zookeeper jplock/zookeeper:3.4.10\nsudo docker run -d -p 5050:5050 --name mesomaster --link zookeeper:zookeeper mesosphere/mesos-master:1.0.1-2.0.93.ubuntu1404 mesos-master --zk=zk://zookeeper:2181/titus/mainvpc/mesos --work_dir=/tmp/master --log_dir=/var/log/mesos --logging_level=INFO --quorum=1  You can see the key ports for these are 2181 (Zookeeper) and 5050 (Mesos).", 
+            "text": "Zookeeper 3.4.8 (with Exhibitor 1.5.5)  Mesos 1.0.1   We run a high availability configuration of Mesos and Zookeeper. You can run this\non a node using Docker in a non-production mode by using:  sudo docker run -d -p 2181:2181 --name zookeeper jplock/zookeeper:3.4.10\nsudo docker run -d -p 5050:5050 --name mesomaster mesosphere/mesos-master:1.0.1-2.0.93.ubuntu1404 mesos-master --zk=zk://localhost:2181/titus/mainvpc/mesos --work_dir=/tmp/master --log_dir=/var/log/mesos --logging_level=INFO --quorum=1  You can see the key ports for these are 2181 (Zookeeper) and 5050 (Mesos).", 
             "title": "Mesos and Zookeeper"
         }, 
         {
@@ -72,7 +87,7 @@
         }, 
         {
             "location": "/install/prereqs-amazon/", 
-            "text": "Creating security groups\n\n\nTwo security groups are needed. We are naming them \ntitusapp\n and \ntitusmaster-mainvpc\n:\n\n\n\n\nFor the infrastructure security group (titusmaster-mainvpc)\n\n\nFor inbound\n- From titusmaster-mainvpc security group, ALL TCP, All ICMP\n- From anywhere (including Internet), SSH\n\n\n\n\nFor outbound\n- All traffic", 
+            "text": "Creating security groups\n\n\nTwo security groups are needed. We are naming them \ntitusapp\n and \ntitusmaster-mainvpc\n:\n\n\n\n\nInfrastructure security group\n\n\nThis is for the \ntitusmaster-mainvpc\n security group\n\n\nFor inbound\n- From titusmaster-mainvpc security group, ALL TCP, All ICMP\n- From anywhere (including Internet), SSH\n\n\n\n\nFor outbound\n- All traffic\n\n\n\n\nApp security group\n\n\nThis is for the \ntitusapp\n \n\n\nFor inbound and outbound\n- Up to your application needs\n\n\nCreating IAM Roles", 
             "title": "Amazon Prereqs"
         }, 
         {
@@ -81,9 +96,19 @@
             "title": "Creating security groups"
         }, 
         {
-            "location": "/install/prereqs-amazon/#for-the-infrastructure-security-group-titusmaster-mainvpc", 
-            "text": "For inbound\n- From titusmaster-mainvpc security group, ALL TCP, All ICMP\n- From anywhere (including Internet), SSH   For outbound\n- All traffic", 
-            "title": "For the infrastructure security group (titusmaster-mainvpc)"
+            "location": "/install/prereqs-amazon/#infrastructure-security-group", 
+            "text": "This is for the  titusmaster-mainvpc  security group  For inbound\n- From titusmaster-mainvpc security group, ALL TCP, All ICMP\n- From anywhere (including Internet), SSH   For outbound\n- All traffic", 
+            "title": "Infrastructure security group"
+        }, 
+        {
+            "location": "/install/prereqs-amazon/#app-security-group", 
+            "text": "This is for the  titusapp    For inbound and outbound\n- Up to your application needs", 
+            "title": "App security group"
+        }, 
+        {
+            "location": "/install/prereqs-amazon/#creating-iam-roles", 
+            "text": "", 
+            "title": "Creating IAM Roles"
         }, 
         {
             "location": "/install/master/", 
@@ -102,7 +127,7 @@
         }, 
         {
             "location": "/install/agent/", 
-            "text": "Creating a Titus agent launch configuration and ASG\n\n\nWhen Spinnaker creates agent deployments, it creates the following user data in the launch config for an ASG. The\nagent processes depend on these being right.\n\n\nNETFLIX_ACCOUNT=\ntest\n\nNETFLIX_ACCOUNT_TYPE=\nmain\n\nNETFLIX_ENVIRONMENT=\ntest\n\nNETFLIX_APP=\ntitusagent\n\nNETFLIX_APPUSER=\ntitusagent\n\nNETFLIX_STACK=\nmainvpc\n\nNETFLIX_CLUSTER=\ntitusagent-mainvpc-m4.4xlarge.2\n\nNETFLIX_DETAIL=\nm4.4xlarge.2\n\nNETFLIX_AUTO_SCALE_GROUP=\ntitusagent-mainvpc-m4.4xlarge.2-v004\n\nNETFLIX_LAUNCH_CONFIG=\ntitusagent-mainvpc-m4.4xlarge.2-v004-07202017195940\n\nEC2_REGION=\neu-west-1\n\n\n\n\n\nUpgrade Ubuntu\n\n\nsudo su\napt-get update\napt-get upgrade\napt-get dist-upgrade\nshutdown -r now\n\n\n\n\nInstall Docker\n\n\nInstall docker as instructed \nhere\n\n- Update \n/etc/default/docker/daemon.json\n to include \n{\"iptables\": false}\n and restart the Docker daemon.\n\n\nMesos-slave\n\n\nRan mesos-slave with Docker image instead of installing natively.\n- TODO - need to do this without Docker\n- \ndocker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources=\"network:1000\" --attributes=\"region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29\"\n\n\ntitus-executor\n\n\n\n\ndpkg -i titus-agent_0.0.1-1_all.deb\n\n\n\n\ntitus-vpc-driver\n\n\n\n\ndpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb\n\n\nWe use \n--force-overwrite\n flag to ensure all files are updated.\n\n\nSetup networking so that interface names use the legacy \neth\n prefix convention.\n\n\nAdd \nnet.ifnames=0\n to GRUB_CMDLINE_LINUX= in \n/etc/default/grub\n and then run \nsudo update-grub\n.\n\n\nRemove the \n/etc/udev/rules.d/70-persistent-net.rules\n file and then run \nsudo reboot\n.\n\n\nAfter reboot, the default interface should be named \neth0\n instead of the previous \nens3\n.\n\n\nRun \nsudo /apps/titus-vpc-driver/bin/run\n to start the driver. Since all of the other\ncomponents are in the host network, it should be fine to run it from the host.\n\n\n\n\ntitus-metadata-service\n\n\n\n\ndpkg -i titus-metadata-service_0.0.1-1_all.deb\n\n\nRun \nsudo /apps/titus-metadata-service/bin/run\n to start the proxy", 
+            "text": "Creating a Titus agent launch configuration and ASG\n\n\nWhen Spinnaker creates agent deployments, it creates the following user data in the launch config for an ASG. The\nagent processes depend on these being right.\n\n\nNETFLIX_ACCOUNT=\ntest\n\nNETFLIX_ACCOUNT_TYPE=\nmain\n\nNETFLIX_ENVIRONMENT=\ntest\n\nNETFLIX_APP=\ntitusagent\n\nNETFLIX_APPUSER=\ntitusagent\n\nNETFLIX_STACK=\nmainvpc\n\nNETFLIX_CLUSTER=\ntitusagent-mainvpc-m4.4xlarge.2\n\nNETFLIX_DETAIL=\nm4.4xlarge.2\n\nNETFLIX_AUTO_SCALE_GROUP=\ntitusagent-mainvpc-m4.4xlarge.2-v004\n\nNETFLIX_LAUNCH_CONFIG=\ntitusagent-mainvpc-m4.4xlarge.2-v004-07202017195940\n\nEC2_REGION=\neu-west-1\n\n\n\n\n\nUpgrade Ubuntu\n\n\nsudo su\napt-get update\napt-get upgrade\napt-get dist-upgrade\nshutdown -r now\n\n\n\n\nInstall Docker\n\n\nInstall docker as instructed \nhere\n\n- Add the current user to docker group \nsudo gpasswd -a $USER docker\n, log out and then log back in.\n- Update \n/etc/docker/daemon.json\n to include \n{\"iptables\": false}\n and restart the instance.\n  - Instead of restarting the instance, you can also restart just the Docker daemon and update the IP tables with \nsudo iptables -A FORWARD -j ACCEPT\n\n\nMesos-slave\n\n\nRan mesos-slave with Docker image instead of installing natively.\n- TODO - need to do this without Docker\n- \ndocker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources=\"network:1000\" --attributes=\"region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29\"\n\n\ntitus-executor\n\n\n\n\ndpkg -i titus-agent_0.0.1-1_all.deb\n\n\n\n\ntitus-vpc-driver\n\n\n\n\ndpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb\n\n\nWe use \n--force-overwrite\n flag to ensure all files are updated.\n\n\nSetup networking so that interface names use the legacy \neth\n prefix convention.\n\n\nAdd \nnet.ifnames=0\n to GRUB_CMDLINE_LINUX= in \n/etc/default/grub\n and then run \nsudo update-grub\n.\n\n\nRemove the \n/etc/udev/rules.d/70-persistent-net.rules\n file and then run \nsudo reboot\n.\n\n\nAfter reboot, the default interface should be named \neth0\n instead of the previous \nens3\n.\n\n\nRun \nsudo /apps/titus-vpc-driver/bin/run\n to start the driver. Since all of the other\ncomponents are in the host network, it should be fine to run it from the host.\n\n\n\n\ntitus-metadata-service\n\n\n\n\ndpkg -i titus-metadata-service_0.0.1-1_all.deb\n\n\nRun \nsudo /apps/titus-metadata-service/bin/run\n to start the proxy", 
             "title": "Agent"
         }, 
         {
@@ -117,7 +142,7 @@
         }, 
         {
             "location": "/install/agent/#install-docker", 
-            "text": "Install docker as instructed  here \n- Update  /etc/default/docker/daemon.json  to include  {\"iptables\": false}  and restart the Docker daemon.", 
+            "text": "Install docker as instructed  here \n- Add the current user to docker group  sudo gpasswd -a $USER docker , log out and then log back in.\n- Update  /etc/docker/daemon.json  to include  {\"iptables\": false}  and restart the instance.\n  - Instead of restarting the instance, you can also restart just the Docker daemon and update the IP tables with  sudo iptables -A FORWARD -j ACCEPT", 
             "title": "Install Docker"
         }, 
         {

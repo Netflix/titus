@@ -185,7 +185,9 @@ shutdown -r now
 
 <h1 id="install-docker">Install Docker</h1>
 <p>Install docker as instructed <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository">here</a>
-- Update <code>/etc/default/docker/daemon.json</code> to include <code>{"iptables": false}</code> and restart the Docker daemon.</p>
+- Add the current user to docker group <code>sudo gpasswd -a $USER docker</code>, log out and then log back in.
+- Update <code>/etc/docker/daemon.json</code> to include <code>{"iptables": false}</code> and restart the instance.
+  - Instead of restarting the instance, you can also restart just the Docker daemon and update the IP tables with <code>sudo iptables -A FORWARD -j ACCEPT</code></p>
 <h1 id="mesos-slave">Mesos-slave</h1>
 <p>Ran mesos-slave with Docker image instead of installing natively.
 - TODO - need to do this without Docker

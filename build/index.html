@@ -66,6 +66,15 @@
     <li class="toctree-l2"><a href="#metadata-service">Metadata Service</a></li>
     
 
+    <li class="toctree-l2"><a href="#titus-api-definitions">Titus Api Definitions</a></li>
+    
+
+    <li class="toctree-l2"><a href="#titus-master">Titus Master</a></li>
+    
+
+    <li class="toctree-l2"><a href="#titus-gateway">Titus Gateway</a></li>
+    
+
     </ul>
 	    </li>
           
@@ -168,6 +177,24 @@ git clone https://github.com/Netflix/titus-metadata-service.git
 cd titus-metadata-service
 make build
 ./gradlew clean buildDeb
+</code></pre>
+
+<h1 id="titus-api-definitions">Titus Api Definitions</h1>
+<pre><code>git clone https://github.com/Netflix/titus-api-definitions.git
+cd titus-api-definitions
+./gradlew clean build
+</code></pre>
+
+<h1 id="titus-master">Titus Master</h1>
+<pre><code>git clone https://github.com/Netflix/titus-control-plane.git
+cd titus-control-plane
+./gradlew clean buildDeb -PidlLocal
+</code></pre>
+
+<h1 id="titus-gateway">Titus Gateway</h1>
+<pre><code>git clone https://github.com/Netflix/titus-control-plane.git
+cd titus-control-plane
+./gradlew clean buildDeb -PidlLocal
 </code></pre>
 
 <p>This will produce product three deb files under build/distributions</p>
