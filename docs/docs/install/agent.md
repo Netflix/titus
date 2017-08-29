@@ -16,6 +16,7 @@ EC2_REGION="eu-west-1"
 ```
 
 # Upgrade Ubuntu
+**NO NOT UPGRADE UBUNTU** - This seems to be be breaking the vpc driver currently.
 ```
 sudo su
 apt-get update
@@ -26,28 +27,30 @@ shutdown -r now
 
 # Install Docker
 Install docker as instructed [here](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository)
-- Add the current user to docker group `sudo gpasswd -a $USER docker`, log out and then log back in.
-- Update `/etc/docker/daemon.json` to include `{"iptables": false}` and restart the instance.
-  - Instead of restarting the instance, you can also restart just the Docker daemon and update the IP tables with `sudo iptables -A FORWARD -j ACCEPT`
+
+* Add the current user to docker group `sudo gpasswd -a $USER docker`, log out and then log back in.
+* Update `/etc/docker/daemon.json` to include `{"iptables": false}` and restart the instance.
+    * Instead of restarting the instance, you can also restart just the Docker daemon and update the IP tables with `sudo iptables -A FORWARD -j ACCEPT`
 
 # Mesos-slave
-Ran mesos-slave with Docker image instead of installing natively.
-- TODO - need to do this without Docker
-- `docker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources="network:1000" --attributes="region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29"`
+We run mesos-slave through startup scripts. To make running Titus easier, you can run via a Docker image instead.
+
+* `docker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources="network:1000" --attributes="region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29"`
+    * **TODO**: integrate gen_env.sh 
 
 # titus-executor
-- dpkg -i titus-agent_0.0.1-1_all.deb
+* dpkg -i titus-agent_0.0.1-1_all.deb
 
 # titus-vpc-driver
-- dpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb
-  - We use `--force-overwrite` flag to ensure all files are updated.
-- Setup networking so that interface names use the legacy `eth` prefix convention.
-  - Add `net.ifnames=0` to GRUB_CMDLINE_LINUX= in `/etc/default/grub` and then run `sudo update-grub`.
-  - Remove the `/etc/udev/rules.d/70-persistent-net.rules` file and then run `sudo reboot`.
-  - After reboot, the default interface should be named `eth0` instead of the previous `ens3`.
-- Run `sudo /apps/titus-vpc-driver/bin/run` to start the driver. Since all of the other
-components are in the host network, it should be fine to run it from the host.
+* dpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb
+    * We use `--force-overwrite` flag to ensure all files are updated.
+* Setup networking so that interface names use the legacy `eth` prefix convention.
+    * Add `net.ifnames=0` to GRUB_CMDLINE_LINUX= in `/etc/default/grub` and then run `sudo update-grub`.
+    * Remove the `/etc/udev/rules.d/70-persistent-net.rules` file and then run `sudo reboot`.
+    * After reboot, the default interface should be named `eth0` instead of the previous `ens3`.
+* Run `sudo /apps/titus-vpc-driver/bin/run` to start the driver. Since all of the other
+  components are in the host network, it should be fine to run it from the host.
 
 # titus-metadata-service
-- dpkg -i titus-metadata-service_0.0.1-1_all.deb
-- Run `sudo /apps/titus-metadata-service/bin/run` to start the proxy
+* dpkg -i titus-metadata-service_0.0.1-1_all.deb
+* Run `sudo /apps/titus-metadata-service/bin/run` to start the proxy
