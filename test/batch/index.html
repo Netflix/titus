@@ -368,7 +368,7 @@
                 <p>To send requests, curl jobs to the gateway node</p>
 <h1 id="testing-the-most-basic-job">Testing the most basic job</h1>
 <pre><code>curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
-   &quot;applicationName&quot;: &quot;ubuntu&quot;,
+   &quot;applicationName&quot;: &quot;library/ubuntu&quot;,
    &quot;version&quot;: &quot;latest&quot;,
    &quot;type&quot;: &quot;batch&quot;,
    &quot;entryPoint&quot;: &quot;sleep 10&quot;,
@@ -377,12 +377,12 @@
    &quot;memory&quot;: 1024,
    &quot;disk&quot;: 1000,
    &quot;networkMbps&quot;: 128
- }' 'http://localhost:7001/api/v2/jobs'
+ }' 'http://GATEWAYIP:7001/api/v2/jobs'
 </code></pre>
 
-<h1 id="testing-the-most-basic-job_1">Testing the most basic job</h1>
+<h1 id="testing-with-iam-roles">Testing with IAM Roles</h1>
 <pre><code>curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
-   &quot;applicationName&quot;: &quot;ubuntu&quot;,
+   &quot;applicationName&quot;: &quot;library/ubuntu&quot;,
    &quot;version&quot;: &quot;latest&quot;,
    &quot;type&quot;: &quot;batch&quot;,
    &quot;entryPoint&quot;: &quot;sleep 10&quot;,
@@ -392,7 +392,23 @@
    &quot;disk&quot;: 1000,
    &quot;networkMbps&quot;: 128,
    &quot;iamProfile&quot;: &quot;arn:aws:iam::ACCOUNTID:role/IAMPROFILENAME&quot; 
- }' 'http://localhost:7001/api/v2/jobs'
+ }' 'http://GATEWAYIP:7001/api/v2/jobs'
+</code></pre>
+
+<h1 id="testing-with-security-groups-and-routable-ips">Testing with security groups and routable IP's</h1>
+<pre><code>curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
+   &quot;applicationName&quot;: &quot;library/ubuntu&quot;,
+   &quot;version&quot;: &quot;latest&quot;,
+   &quot;type&quot;: &quot;batch&quot;,
+   &quot;entryPoint&quot;: &quot;sleep 10&quot;,
+   &quot;instances&quot;: 1,
+   &quot;cpu&quot;: 1,
+   &quot;memory&quot;: 1024,
+   &quot;disk&quot;: 1000,
+   &quot;networkMbps&quot;: 128,
+   &quot;allocateIpAddress&quot;: true,
+   &quot;securityGroups&quot;: [&quot;sg-34b11b52&quot;]
+}' 'http://GATEWAYIP:7001/api/v2/jobs'
 </code></pre>
 
 <h1 id="testing-the-metadataservice-without-executor-or-vpc-driver">Testing the metadataservice without executor or VPC driver</h1>
