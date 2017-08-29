@@ -7,6 +7,7 @@ Run as root
 * install mesos
 ```
 sudo wget http://repos.mesosphere.com/ubuntu/pool/main/m/mesos/mesos_1.0.1-2.0.94.ubuntu1604_amd64.deb
+sudo dpkg -i mesos_1.0.1-2.0.94.ubuntu1604_amd64.deb
 sudo apt-get install -f
 ```
 * Copy `titus-server-master/build/distributions/titus-server-master<version>.deb` to server
