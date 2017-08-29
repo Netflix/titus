@@ -11,11 +11,11 @@ sudo dpkg -i mesos_1.0.1-2.0.94.ubuntu1604_amd64.deb
 sudo apt-get install -f
 ```
 * Copy `titus-server-master/build/distributions/titus-server-master<version>.deb` to server
-* Run `dpkg -i titus-server-master<version>.deb` to install the debian
+* Run `sudo dpkg -i titus-server-master<version>.deb` to install the debian
 
 * Create `~/titus.properties` with the properties:
 ```
-mantis.master.apiport=7100
+mantis.master.apiport=7001
 mantis.master.apiProxyPort=7001
 mantis.master.grpcServer.port=7104
 
@@ -48,7 +48,7 @@ Run as ubuntu user
 * update apt repos with `sudo apt-get update`
 * install java8 with `sudo apt-get install openjdk-8-jdk`
 * Copy `titus-server-gateway/build/distributions/titus-server-gateway_<version>.deb` to server
-* Run `dpkg -i titus-server-gateway_<version>.deb` to install the debian
+* Run `sudo dpkg -i titus-server-gateway_<version>.deb` to install the debian
 * `export JAVA_OPTS=”-Dtitus.gateway.masterIp=<ip> -Dtitus.gateway.masterHttpPort=<port>”`
 * Start server with `sudo /opt/titus-server-gateway/bin/titus-server-gateway | tee ~/titus.log`
 
