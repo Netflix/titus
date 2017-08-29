@@ -3,7 +3,7 @@ To send requests, curl jobs to the gateway node
 # Testing the most basic job
 ```
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
-   "applicationName": "ubuntu",
+   "applicationName": "library/ubuntu",
    "version": "latest",
    "type": "batch",
    "entryPoint": "sleep 10",
@@ -12,13 +12,13 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
    "memory": 1024,
    "disk": 1000,
    "networkMbps": 128
- }' 'http://localhost:7001/api/v2/jobs'
+ }' 'http://GATEWAYIP:7001/api/v2/jobs'
 ```
 
-# Testing the most basic job
+# Testing with IAM Roles
 ```
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
-   "applicationName": "ubuntu",
+   "applicationName": "library/ubuntu",
    "version": "latest",
    "type": "batch",
    "entryPoint": "sleep 10",
@@ -28,7 +28,24 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
    "disk": 1000,
    "networkMbps": 128,
    "iamProfile": "arn:aws:iam::ACCOUNTID:role/IAMPROFILENAME" 
- }' 'http://localhost:7001/api/v2/jobs'
+ }' 'http://GATEWAYIP:7001/api/v2/jobs'
+```
+
+# Testing with security groups and routable IP's
+```
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
+   "applicationName": "library/ubuntu",
+   "version": "latest",
+   "type": "batch",
+   "entryPoint": "sleep 10",
+   "instances": 1,
+   "cpu": 1,
+   "memory": 1024,
+   "disk": 1000,
+   "networkMbps": 128,
+   "allocateIpAddress": true,
+   "securityGroups": ["sg-34b11b52"]
+}' 'http://GATEWAYIP:7001/api/v2/jobs'
 ```
 
 # Testing the metadataservice without executor or VPC driver
@@ -62,5 +79,5 @@ curl --header "remote-ip:1.1.1.2" http://10.11.10.11:9999/latest/meta-data/iam/s
 ```
 
 # Debugging Mesos
-- IPOFMESOS:5050
-- IPOFMESOS:5050/slaves
+* IPOFMESOS:5050
+* IPOFMESOS:5050/slaves
