@@ -365,7 +365,10 @@
                   <a href="https://github.com/Netflix/titus/edit/master/docs/install/agent.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
                 
                 
-                <h1 id="creating-a-titus-agent-launch-configuration-and-asg">Creating a Titus agent launch configuration and ASG</h1>
+                <h1 id="launch-agents-in-internal-vpc-subnets">Launch agents in internal VPC subnets</h1>
+<p>Currently Titus only sets up private IP's for containers. Therefore, it will not work properly if you launch
+agents in external VPC's. While it will launch containers, the public IP will not have network access.</p>
+<h1 id="creating-a-titus-agent-launch-configuration-and-asg">Creating a Titus agent launch configuration and ASG</h1>
 <p>When Spinnaker creates agent deployments, it creates the following user data in the launch config for an ASG. The
 agent processes depend on these being right.</p>
 <pre><code>NETFLIX_ACCOUNT=&quot;test&quot;
