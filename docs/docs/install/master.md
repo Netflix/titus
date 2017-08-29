@@ -1,6 +1,6 @@
 # Master
 
-Run as root
+Run as ubuntu user
 
 * update apt repos with `sudo apt-get update`
 * install java8 with `sudo apt-get install openjdk-8-jdk`
@@ -12,8 +12,6 @@ sudo apt-get install -f
 ```
 * Copy `titus-server-master/build/distributions/titus-server-master<version>.deb` to server
 * Run `dpkg -i titus-server-master<version>.deb` to install the debian
-  
-Run as Ubuntu user
 
 * Create `~/titus.properties` with the properties:
 ```
@@ -45,15 +43,12 @@ mantis.master.framework.name=TitusFramework
 
 # Gateway
 
-Run as root
+Run as ubuntu user
 
 * update apt repos with `sudo apt-get update`
 * install java8 with `sudo apt-get install openjdk-8-jdk`
 * Copy `titus-server-gateway/build/distributions/titus-server-gateway_<version>.deb` to server
 * Run `dpkg -i titus-server-gateway_<version>.deb` to install the debian
-  
-Run as Ubuntu user
-
 * `export JAVA_OPTS=”-Dtitus.gateway.masterIp=<ip> -Dtitus.gateway.masterHttpPort=<port>”`
 * Start server with `sudo /opt/titus-server-gateway/bin/titus-server-gateway | tee ~/titus.log`
 
