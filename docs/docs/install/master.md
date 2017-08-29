@@ -37,8 +37,9 @@ titus.master.capacityManagement.tiers.1.buffer=0.3
 
 titus.master.job.security.groups.default.list=<DEFAULT_SG>
 mantis.master.framework.name=TitusFramework
-
 ```
+
+* Note that DEFAULT_SG must be the id, not the name (for example sg-12345)
 * Start server with `sudo /opt/titus-server-master/bin/titus-server-master -p ~/titus.properties | tee ~/titus.log`
 
 # Gateway
