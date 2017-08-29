@@ -1,3 +1,7 @@
+# Launch agents in internal VPC subnets
+Currently Titus only sets up private IP's for containers. Therefore, it will not work properly if you launch
+agents in external VPC's. While it will launch containers, the public IP will not have network access.
+
 # Creating a Titus agent launch configuration and ASG
 When Spinnaker creates agent deployments, it creates the following user data in the launch config for an ASG. The
 agent processes depend on these being right.
