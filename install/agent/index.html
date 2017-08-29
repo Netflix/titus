@@ -382,6 +382,7 @@ EC2_REGION=&quot;eu-west-1&quot;
 </code></pre>
 
 <h1 id="upgrade-ubuntu">Upgrade Ubuntu</h1>
+<p><strong>NO NOT UPGRADE UBUNTU</strong> - This seems to be be breaking the vpc driver currently.</p>
 <pre><code>sudo su
 apt-get update
 apt-get upgrade
@@ -390,28 +391,40 @@ shutdown -r now
 </code></pre>
 
 <h1 id="install-docker">Install Docker</h1>
-<p>Install docker as instructed <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository">here</a>
-- Add the current user to docker group <code>sudo gpasswd -a $USER docker</code>, log out and then log back in.
-- Update <code>/etc/docker/daemon.json</code> to include <code>{"iptables": false}</code> and restart the instance.
-  - Instead of restarting the instance, you can also restart just the Docker daemon and update the IP tables with <code>sudo iptables -A FORWARD -j ACCEPT</code></p>
+<p>Install docker as instructed <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository">here</a></p>
+<ul>
+<li>Add the current user to docker group <code>sudo gpasswd -a $USER docker</code>, log out and then log back in.</li>
+<li>Update <code>/etc/docker/daemon.json</code> to include <code>{"iptables": false}</code> and restart the instance.<ul>
+<li>Instead of restarting the instance, you can also restart just the Docker daemon and update the IP tables with <code>sudo iptables -A FORWARD -j ACCEPT</code></li>
+</ul>
+</li>
+</ul>
 <h1 id="mesos-slave">Mesos-slave</h1>
-<p>Ran mesos-slave with Docker image instead of installing natively.
-- TODO - need to do this without Docker
-- <code>docker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources="network:1000" --attributes="region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29"</code></p>
+<p>We run mesos-slave through startup scripts. To make running Titus easier, you can run via a Docker image instead.</p>
+<ul>
+<li><code>docker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources="network:1000" --attributes="region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29"</code><ul>
+<li><strong>TODO</strong>: integrate gen_env.sh </li>
+</ul>
+</li>
+</ul>
 <h1 id="titus-executor">titus-executor</h1>
 <ul>
 <li>dpkg -i titus-agent_0.0.1-1_all.deb</li>
 </ul>
 <h1 id="titus-vpc-driver">titus-vpc-driver</h1>
 <ul>
-<li>dpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb</li>
+<li>dpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb<ul>
 <li>We use <code>--force-overwrite</code> flag to ensure all files are updated.</li>
-<li>Setup networking so that interface names use the legacy <code>eth</code> prefix convention.</li>
+</ul>
+</li>
+<li>Setup networking so that interface names use the legacy <code>eth</code> prefix convention.<ul>
 <li>Add <code>net.ifnames=0</code> to GRUB_CMDLINE_LINUX= in <code>/etc/default/grub</code> and then run <code>sudo update-grub</code>.</li>
 <li>Remove the <code>/etc/udev/rules.d/70-persistent-net.rules</code> file and then run <code>sudo reboot</code>.</li>
 <li>After reboot, the default interface should be named <code>eth0</code> instead of the previous <code>ens3</code>.</li>
+</ul>
+</li>
 <li>Run <code>sudo /apps/titus-vpc-driver/bin/run</code> to start the driver. Since all of the other
-components are in the host network, it should be fine to run it from the host.</li>
+  components are in the host network, it should be fine to run it from the host.</li>
 </ul>
 <h1 id="titus-metadata-service">titus-metadata-service</h1>
 <ul>
