@@ -6,7 +6,7 @@ Run as root
 * install java8 with `sudo apt-get install openjdk-8-jdk`
 * install mesos
 ```
-wget http://repos.mesosphere.com/ubuntu/pool/main/m/mesos/mesos_1.0.1-2.0.94.ubuntu1604_amd64.deb
+sudo wget http://repos.mesosphere.com/ubuntu/pool/main/m/mesos/mesos_1.0.1-2.0.94.ubuntu1604_amd64.deb
 sudo apt-get install -f
 ```
 * Copy `titus-server-master/build/distributions/titus-server-master<version>.deb` to server
@@ -20,10 +20,10 @@ mantis.master.apiport=7100
 mantis.master.apiProxyPort=7001
 mantis.master.grpcServer.port=7104
 
-mantis.zookeeper.connectString=`<zookeeperIp>`
+mantis.zookeeper.connectString=<zookeeperIp>
 mantis.zookeeper.root=/titus/main
 
-mesos.master.location=`<mesosMasterIp>:<mesosMasterPort>`
+mesos.master.location=<mesosMasterIp>:<mesosMasterPort>
 
 titus.master.capacityManagement.instanceTypes.0.name=DEFAULT
 titus.master.capacityManagement.instanceTypes.0.minSize=1
