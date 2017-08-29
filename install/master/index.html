@@ -368,10 +368,15 @@
                 <h1 id="master">Master</h1>
 <p>Run as root</p>
 <ul>
-<li>install java8</li>
-<li><code>sudo apt-get update</code></li>
-<li><code>sudo apt-get install openjdk-8-jdk</code></li>
+<li>update apt repos with <code>sudo apt-get update</code></li>
+<li>install java8 with <code>sudo apt-get install openjdk-8-jdk</code></li>
 <li>install mesos</li>
+</ul>
+<pre><code>wget http://repos.mesosphere.com/ubuntu/pool/main/m/mesos/mesos_1.0.1-2.0.94.ubuntu1604_amd64.deb
+sudo apt-get install -f
+</code></pre>
+
+<ul>
 <li>Copy <code>titus-server-master/build/distributions/titus-server-master&lt;version&gt;.deb</code> to server</li>
 <li>Run <code>dpkg -i titus-server-master&lt;version&gt;.deb</code> to install the debian</li>
 </ul>
@@ -383,20 +388,20 @@
 mantis.master.apiProxyPort=7001
 mantis.master.grpcServer.port=7104
 
-mantis.zookeeper.connectString=&lt;zookeeperIp&gt;
+mantis.zookeeper.connectString=`&lt;zookeeperIp&gt;`
 mantis.zookeeper.root=/titus/main
 
-mesos.master.location=&lt;mesosMasterIp&gt;:&lt;mesosMasterPort&gt;
+mesos.master.location=`&lt;mesosMasterIp&gt;:&lt;mesosMasterPort&gt;`
 
 titus.master.capacityManagement.instanceTypes.0.name=DEFAULT
 titus.master.capacityManagement.instanceTypes.0.minSize=1
 
 # Critical tier (0)
-titus.master.capacityManagement.tiers.0.instanceTypes=m4.4xlarge
+titus.master.capacityManagement.tiers.0.instanceTypes=m4.4xlarge,&lt;INSTANCE_TYPE&gt;
 titus.master.capacityManagement.tiers.0.buffer=0.3
 
 # Flex tier (1)
-titus.master.capacityManagement.tiers.1.instanceTypes=m4.xlarge
+titus.master.capacityManagement.tiers.1.instanceTypes=m4.xlarge,&lt;INSTANCE_TYPE&gt;
 titus.master.capacityManagement.tiers.1.buffer=0.3
 
 titus.master.job.security.groups.default.list=&lt;DEFAULT_SG&gt;
@@ -405,21 +410,20 @@ mantis.master.framework.name=TitusFramework
 </code></pre>
 
 <ul>
-<li>Start server with <code>./opt/titus-server-master/bin/titus-server-master -p ~/titus.properties | tee ~/titus.log</code></li>
+<li>Start server with <code>sudo /opt/titus-server-master/bin/titus-server-master -p ~/titus.properties | tee ~/titus.log</code></li>
 </ul>
 <h1 id="gateway">Gateway</h1>
 <p>Run as root</p>
 <ul>
-<li>install java8</li>
-<li><code>sudo apt-get update</code></li>
-<li><code>sudo apt-get install openjdk-8-jdk</code></li>
+<li>update apt repos with <code>sudo apt-get update</code></li>
+<li>install java8 with <code>sudo apt-get install openjdk-8-jdk</code></li>
 <li>Copy <code>titus-server-gateway/build/distributions/titus-server-gateway_&lt;version&gt;.deb</code> to server</li>
 <li>Run <code>dpkg -i titus-server-gateway_&lt;version&gt;.deb</code> to install the debian</li>
 </ul>
 <p>Run as Ubuntu user</p>
 <ul>
 <li><code>export JAVA_OPTS=”-Dtitus.gateway.masterIp=&lt;ip&gt; -Dtitus.gateway.masterHttpPort=&lt;port&gt;”</code></li>
-<li>Start server with <code>./opt/titus-server-gateway/bin/titus-server-gateway | tee ~/titus.log</code></li>
+<li>Start server with <code>sudo /opt/titus-server-gateway/bin/titus-server-gateway | tee ~/titus.log</code></li>
 </ul>
                 
                   
