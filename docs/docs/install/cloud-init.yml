@@ -1,0 +1,205 @@
+#cloud-config
+
+#ssh_authorized_keys:
+#  - ssh-rsa key1 foo@gmail
+# Uncomment ^ PUT YOUR KEYS HERE IN A YAML ARRAY
+
+apt:
+    sources:
+        docker:
+            source: "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+            keyid: "9DC858229FC7DD38854AE2D88D81803C0EBFCD88" 
+        titus:
+            source: "deb https://5b3c4890b1707d5c53f2190732f5f0d88f812a4e870aaa1e:@packagecloud.io/netflix/titus/ubuntu/ xenial main"
+            keyid: "4B45ACEEC47B4740716E23373A62CE57DC367361"
+
+packages:
+    - docker-ce
+    - build-essential
+    - mesos
+    - titus-executor
+    - titus-vpc-driver
+    - curl
+    - awscli
+    - jq
+
+package_update: true
+    
+write_files:
+    - path: /etc/titus-shared.env
+      content: |
+                SHORT_CIRCUIT_QUITELITE=true
+    - path: /etc/disable-atlas-titus-agent
+      content: ""
+    - path: /etc/systemd/system/docker.service.d/10-docker-config.conf
+      content: |
+                [Service]
+                ExecStart=
+                ExecStart=/usr/bin/dockerd --log-level=debug -H fd:// --init-path=/apps/titus-executor/bin/tini-static --iptables=false --storage-driver=overlay2
+                Restart=always
+                StartLimitInterval=0
+                RestartSec=5
+    - path: /lib/systemd/system/docker-tcp-proxy.service
+      content: |
+                [Unit]
+                Description=Docker Unix Socket TCP Proxy
+                Requires=docker.socket
+                Requires=docker-tcp-proxy.socket
+                After=docker.socket
+                After=docker-tcp-proxy.socket
+
+                [Service]
+                ExecStart=/lib/systemd/systemd-socket-proxyd /var/run/docker.sock
+
+                [Install]
+                WantedBy=multi-user.target
+    - path: /lib/systemd/system/docker-tcp-proxy.socket
+      content: |
+                [Unit]
+                Requires=docker.socket
+                After=docker.socket
+
+                [Socket]
+                ListenStream=0.0.0.0:4243
+
+                [Install]
+                WantedBy=sockets.target
+    - path: /lib/systemd/system/mesos-agent.service
+      content: |
+                # /lib/systemd/system/mesos-agent.service
+                [Unit]
+                Description=Mesos
+                Wants=docker.service
+                After=docker.service
+                Conflicts=halt.target shutdown.target sigpwr.target
+
+                [Service]
+                ExecStartPre=/bin/mkdir -p /var/lib/mesos
+                EnvironmentFile=/etc/mesos-agent.config
+                ExecStart=/usr/sbin/mesos-agent
+                ExecStopPost=/bin/rm -rf /var/lib/mesos/meta/slaves/latest
+                Restart=always
+                StartLimitInterval=0
+                RestartSec=5
+                LimitNOFILE=65535
+                KillMode=mixed
+                KillSignal=SIGUSR1
+
+                [Install]
+                WantedBy=multi-user.target
+    - path: /etc/mesos-attributes.sh
+      permissions: '0755'
+      content: |
+                #!/bin/bash -x 
+
+                set -eu -o pipefail
+
+                AZ=$(curl http://169.254.169.254/latest/meta-data/placement/availability-zone)
+                REGION=${AZ::-1}
+                ATTRIB="region:${REGION};zone:${AZ}"
+
+                INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
+                ATTRIB="${ATTRIB};id:${INSTANCE_ID}"
+
+                # Fill this in with your ASG
+                ASG=foo
+                ATTRIB="${ATTRIB};asg:${ASG}"
+
+                STACK=mainvpc
+                ATTRIB="${ATTRIB};stack:${STACK}"
+
+                INSTANCE_TYPE=$(curl http://169.254.169.254/latest/meta-data/instance-type)
+                ATTRIB="${ATTRIB};itype:${INSTANCE_TYPE}"
+
+                ## Fill this in with the right resource set for your instance type
+                ATTRIB="${ATTRIB};res:ResourceSet-ENIs-2-5"
+
+                echo MESOS_ATTRIBUTES=\"${ATTRIB}\"
+    - path: /etc/systemd/network/10-ens3.network 
+      content: |
+                [Match]
+                Name=ens3
+
+                [Network]
+                DHCP=ipv4
+                UseDomains=yes
+
+                [DHCP]
+                RouteMetric=10
+                UseDomains=yes
+    - path: /etc/systemd/network/10-eth0.network 
+      content: |
+                [Match]
+                Name=eth0
+
+                [Network]
+                DHCP=ipv4
+
+                [DHCP]
+                RouteMetric=10
+                UseDomains=yes
+    - path: /etc/systemd/network/20-else.network 
+      content: |
+                [Match]
+                Name=eth*
+
+                [Network]
+                DHCP=ipv4
+
+                [DHCP]
+                RouteMetric=100
+    - path: /etc/titus-executor/config.json
+      content: |
+                {
+                  "stack": "mainvpc",
+                  "docker": {
+                    "host": "tcp://127.0.0.1:4243",
+                    "registry": "docker.io"
+                  },
+                  "uploaders": {
+                     },
+                  "env": {
+                    "copiedFromHost": [
+                      "NETFLIX_ENVIRONMENT",
+                      "NETFLIX_ACCOUNT",
+                      "NETFLIX_STACK",
+                      "EC2_INSTANCE_ID",
+                      "EC2_REGION",
+                      "EC2_AVAILABILITY_ZONE",
+                      "EC2_OWNER_ID",
+                      "EC2_VPC_ID",
+                      "EC2_RESERVATION_ID"
+                    ],
+                    "hardCoded": {
+                      "NETFLIX_APPUSER": "appuser",
+                      "EC2_DOMAIN": "amazonaws.com"
+                    }
+                  },
+                  "statusCheckFrequency": "10s",
+                  "useNewNetworkDriver": true,
+                  "usePrivilegedTasks": false,
+                  "useMetatron": false,
+                  "logsTmpDir": "/var/lib/titus-container-logs"
+                }
+
+power_state:
+    mode: reboot
+
+runcmd:
+    - "rm /etc/udev/rules.d/70-persistent-net.rules"
+    - [systemctl, disable, networking]
+    - [systemctl, enable, systemd-networkd]
+    - [systemctl, enable, docker-tcp-proxy]
+    - "rm /lib/systemd/system/mesos-slave.service"
+    - "rm /lib/systemd/system/mesos-master.service"
+    - 'echo GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0 net.ifnames=0\" >> /etc/default/grub.d/50-cloudimg-settings.cfg'
+    - [update-grub]
+    - [mkdir, /var/lib/titus-container-logs]
+    - [systemctl, enable, mesos-agent]
+    - "echo MESOS_MASTER=zk://172.31.0.136:2181/titus/mainvpc/mesos >> /etc/mesos-agent.config"
+    - "echo MESOS_PORT=7101 >> /etc/mesos-agent.config"
+    - "echo MESOS_RECOVER=reconnect >> /etc/mesos-agent.config"
+    - "echo MESOS_WORK_DIR=/var/lib/mesos >> /etc/mesos-agent.config"
+    - "echo MESOS_STRICT=false >> /etc/mesos-agent.config"
+    - "echo 'MESOS_RESOURCES=mem:6400;disk:10000;network:9000' >> /etc/mesos-agent.config"
+    - "/etc/mesos-attributes.sh >> /etc/mesos-agent.config"
