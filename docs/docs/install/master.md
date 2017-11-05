@@ -1,55 +1,49 @@
-# Master
-
+## Master
 Run as ubuntu user
 
+* add titus apt repo with `curl -s https://8095c452e9473a3fae3ea86a6f2572c2cde0d7b5ec63e84f:@packagecloud.io/install/repositories/netflix/titus/script.deb.sh | sudo bash`
 * update apt repos with `sudo apt-get update`
 * install java8 with `sudo apt-get install openjdk-8-jdk`
-* install mesos
-```
-sudo wget http://repos.mesosphere.com/ubuntu/pool/main/m/mesos/mesos_1.0.1-2.0.94.ubuntu1604_amd64.deb
-sudo dpkg -i mesos_1.0.1-2.0.94.ubuntu1604_amd64.deb
-sudo apt-get install -f
-```
+* install mesos with `sudo apt-get install mesos`
 * Copy `titus-server-master/build/distributions/titus-server-master<version>.deb` to server
 * Run `sudo dpkg -i titus-server-master<version>.deb` to install the debian
 
-* Create `~/titus.properties` with the properties:
+* Create `~/titusmaster.properties` with the properties:
 ```
-mantis.master.apiport=7001
-mantis.master.apiProxyPort=7001
-mantis.master.grpcServer.port=7104
+titus.master.apiport=7001
+titus.master.apiProxyPort=7001
+titus.master.grpcServer.port=7104
 
-mantis.zookeeper.connectString=<zookeeperIp>
-mantis.zookeeper.root=/titus/main
+titus.zookeeper.connectString=<ZK_IP>:<ZK_PORT>
+titus.zookeeper.root=/titus/main
 
-mesos.master.location=<mesosMasterIp>:<mesosMasterPort>
+mesos.master.location=<MESOS_MASTER_IP>:<MESOS_MASTER_PORT>
 
-titus.master.capacityManagement.instanceTypes.0.name=DEFAULT
-titus.master.capacityManagement.instanceTypes.0.minSize=1
+titus.agent.fullCacheRefreshIntervalMs=10000
+titus.agent.agentServerGroupPattern=.*
 
-# Critical tier (0)
-titus.master.capacityManagement.tiers.0.instanceTypes=m4.4xlarge,<INSTANCE_TYPE>
-titus.master.capacityManagement.tiers.0.buffer=0.3
+titusMaster.job.configuration.defaultIamRole=<DEFAULT_IAM_ROLE_ARN>
+titusMaster.job.configuration.defaultSecurityGroups=<SECURITY_GROUP_ID>
 
-# Flex tier (1)
-titus.master.capacityManagement.tiers.1.instanceTypes=m4.xlarge,<INSTANCE_TYPE>
-titus.master.capacityManagement.tiers.1.buffer=0.3
-
-titus.master.job.security.groups.default.list=<DEFAULT_SG>
-mantis.master.framework.name=TitusFramework
+mesos.titus.executor=/apps/titus-executor/bin/titus-executor
 ```
 
-* Note that DEFAULT_SG must be the id, not the name (for example sg-12345)
-* Start server with `sudo /opt/titus-server-master/bin/titus-server-master -p ~/titus.properties | tee ~/titus.log`
+* Start server with `sudo /opt/titus-server-master/bin/titus-server-master -p ~/titusmaster.properties | tee ~/titusmaster.log`
 
-# Gateway
-
+## Gateway
 Run as ubuntu user
 
 * update apt repos with `sudo apt-get update`
 * install java8 with `sudo apt-get install openjdk-8-jdk`
-* Copy `titus-server-gateway/build/distributions/titus-server-gateway_<version>.deb` to server
-* Run `sudo dpkg -i titus-server-gateway_<version>.deb` to install the debian
-* `export JAVA_OPTS=”-Dtitus.gateway.masterIp=<ip> -Dtitus.gateway.masterHttpPort=<port>”`
-* Start server with `sudo /opt/titus-server-gateway/bin/titus-server-gateway | tee ~/titus.log`
+
+* Copy `titus-server-gateway/build/distributions/titus-server-gateway<version>.deb` to server
+* Run `sudo dpkg -i titus-server-gateway<version>.deb` to install the debian
+
+* Create `~/titusgateway.properties` with the properties:
+```
+titus.gateway.masterIp=<MASTER_IP>
+titus.gateway.masterHttpPort=<MASTER_PORT>
+```
+
+* Start server with `sudo /opt/titus-server-gateway/bin/titus-server-gateway -p ~/titusgateway.properties | tee ~/titusgateway.log`
 
