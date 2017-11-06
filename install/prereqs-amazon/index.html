@@ -270,15 +270,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#infrastructure-security-group" title="Infrastructure security group" class="md-nav__link">
-    Infrastructure security group
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#app-security-group" title="App security group" class="md-nav__link">
-    App security group
+  <a href="#vpc-setup" title="VPC Setup" class="md-nav__link">
+    VPC Setup
   </a>
   
 </li>
@@ -390,15 +383,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#infrastructure-security-group" title="Infrastructure security group" class="md-nav__link">
-    Infrastructure security group
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#app-security-group" title="App security group" class="md-nav__link">
-    App security group
+  <a href="#vpc-setup" title="VPC Setup" class="md-nav__link">
+    VPC Setup
   </a>
   
 </li>
@@ -420,22 +406,41 @@
                   <a href="https://github.com/Netflix/titus/edit/master/docs/install/prereqs-amazon.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
                 
                 
-                <h1 id="creating-security-groups">Creating security groups</h1>
-<p>Two security groups are needed. We are naming them <code>titusapp</code> and <code>titusmaster-mainvpc</code>:</p>
+                <h1 id="subnets">Subnets</h1>
+<p>The Titus agent must run in a "private subnet" (Amazon terminology), or a Subnet which does not rely on 1:1 NAT for communication across the VPC boundary. This is because the Titus VPC integration code sets up agent IPs in the same subnet that the agent is spawned in, and the containers use secondary Private IPs. The driver does not set up any kind of NAT on these secondary IPs, so they are without ingress connectivity.</p>
+<h2 id="vpc-setup">VPC Setup</h2>
+<p>In the most minimal Titus install, you need to create a VPC with a "public" and "private" subnet. All of your Titus infrastructure will live in the private subnet.</p>
+<p>You will not be able to SSH directly into your Titus instances. You need to create a instance with the <code>titusmaster-mainvpc</code> and <code>titusbastions</code> security groups. This instance should be provisioned in the <em>Public</em> subnet(s). You can then go ahead and SSH to this instance with the <code>-A</code> option. </p>
+<p>The default Amazon VPC wizard will create this for you. If you need to scale your Titus cluster, you need to copy the configuration of the <em>private</em> subnets, and create one per availability zone.</p>
+<p>A slightly more advanced version of this configuration is to configure IPv6 on the private subnet, and use an igw for the IPv6 routing for that subnet, so you can SSH directly to the Titus infrastructure on their IPv6 addresses.</p>
+<h1 id="creating-security-groups">Creating security groups</h1>
+<p>Three security groups are needed. We are naming them <code>titusbastion</code>, <code>titusapp</code>, <code>titusmaster-mainvpc</code>:</p>
 <p><img src="../../images/secgroups.png" /></p>
+<h2 id="bastion-security-group">Bastion Security Group</h2>
+<p>For inbound:</p>
+<ul>
+<li>From anywhere, TCP 22</li>
+<li>From anywhere, All ICMP</li>
+</ul>
 <h2 id="infrastructure-security-group">Infrastructure security group</h2>
 <p>This is for the <code>titusmaster-mainvpc</code> security group</p>
-<p>For inbound
-- From titusmaster-mainvpc security group, ALL TCP, All ICMP
-- From anywhere (including Internet), SSH</p>
+<p>For inbound</p>
+<ul>
+<li>From titusmaster-mainvpc security group, ALL TCP, All ICMP</li>
+<li>From anywhere (including Internet), SSH</li>
+</ul>
 <p><img src="../../images/titusmaster-mainvpc-secgroup-inbound.png" /></p>
-<p>For outbound
-- All traffic</p>
+<p>For outbound</p>
+<ul>
+<li>All traffic</li>
+</ul>
 <p><img src="../../images/titusmaster-mainvpc-secgroup-outbound.png" /></p>
 <h2 id="app-security-group">App security group</h2>
 <p>This is for the <code>titusapp</code> </p>
-<p>For inbound and outbound
-- Up to your application needs</p>
+<p>For inbound and outbound</p>
+<ul>
+<li>Up to your application needs</li>
+</ul>
 <h1 id="creating-iam-roles">Creating IAM Roles</h1>
 <p>Three IAM roles are needed. We are naming them `titusmasterInstanceProfile' and 'titusappwiths3InstanceProfile'
 and 'titusappnos3InstanceProfile'.</p>

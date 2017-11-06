@@ -22,6 +22,7 @@ packages:
     - curl
     - awscli
     - jq
+    - linux-generic-hwe-16.04
 
 package_update: true
     
@@ -122,7 +123,7 @@ write_files:
 
                 [Network]
                 DHCP=ipv4
-                UseDomains=yes
+                ConfigureWithoutCarrier=true
 
                 [DHCP]
                 RouteMetric=10
@@ -134,6 +135,7 @@ write_files:
 
                 [Network]
                 DHCP=ipv4
+                ConfigureWithoutCarrier=true
 
                 [DHCP]
                 RouteMetric=10
@@ -141,13 +143,16 @@ write_files:
     - path: /etc/systemd/network/20-else.network 
       content: |
                 [Match]
-                Name=eth*
+                Name=*
 
                 [Network]
                 DHCP=ipv4
+                ConfigureWithoutCarrier=true
 
                 [DHCP]
                 RouteMetric=100
+                UseDNS=no
+                UseRoutes=no
     - path: /etc/titus-executor/config.json
       content: |
                 {

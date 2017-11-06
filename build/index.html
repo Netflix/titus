@@ -202,9 +202,43 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Building the Code
+      </label>
+    
     <a href="./" title="Building the Code" class="md-nav__link md-nav__link--active">
       Building the Code
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#titus-vpc-driver" title="Titus-vpc-driver" class="md-nav__link">
+    Titus-vpc-driver
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#titus-executor" title="Titus-executor" class="md-nav__link">
+    Titus-executor
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -346,6 +380,27 @@
     
   
   
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#titus-vpc-driver" title="Titus-vpc-driver" class="md-nav__link">
+    Titus-vpc-driver
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#titus-executor" title="Titus-executor" class="md-nav__link">
+    Titus-executor
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -360,32 +415,10 @@
                 
                 
                 <h1 id="agent">Agent</h1>
-<pre><code>mkdir -p $GOPATH/src/github.com/Netflix
-cd $GOPATH/src/github.com/Netflix
-git clone https://github.com/Netflix/titus-agent.git
-cd titus-agent
-make build
-./gradlew clean buildDeb
-</code></pre>
-
-<h1 id="vpc-driver">VPC Driver</h1>
-<pre><code>mkdir -p $GOPATH/src/github.com/Netflix
-cd $GOPATH/src/github.com/Netflix
-git clone https://github.com/Netflix/titus-vpc-driver.git
-cd titus-vpc-driver
-go build
-./gradlew clean buildDeb
-</code></pre>
-
-<h1 id="metadata-service">Metadata Service</h1>
-<pre><code>mkdir -p $GOPATH/src/github.com/Netflix
-cd $GOPATH/src/github.com/Netflix
-git clone https://github.com/Netflix/titus-metadata-service.git
-cd titus-metadata-service
-make build
-./gradlew clean buildDeb
-</code></pre>
-
+<h2 id="titus-vpc-driver">Titus-vpc-driver</h2>
+<p>See the build instructions in the <a href="https://github.com/Netflix/titus-vpc-driver/blob/master/README.md#building">repo</a>.</p>
+<h2 id="titus-executor">Titus-executor</h2>
+<p>See the build instructions in the <a href="https://github.com/Netflix/titus-executor/blob/master/README.md#building">repo</a>.</p>
 <h1 id="titus-api-definitions">Titus Api Definitions</h1>
 <pre><code>git clone https://github.com/Netflix/titus-api-definitions.git
 cd titus-api-definitions
