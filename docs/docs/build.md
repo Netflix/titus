@@ -1,33 +1,11 @@
 # Agent
 
-```
-mkdir -p $GOPATH/src/github.com/Netflix
-cd $GOPATH/src/github.com/Netflix
-git clone https://github.com/Netflix/titus-agent.git
-cd titus-agent
-make build
-./gradlew clean buildDeb
-```
+## Titus-vpc-driver
+See the build instructions in the [repo](https://github.com/Netflix/titus-vpc-driver/blob/master/README.md#building).
+## Titus-executor
+See the build instructions in the [repo](https://github.com/Netflix/titus-executor/blob/master/README.md#building).
 
-# VPC Driver
-```
-mkdir -p $GOPATH/src/github.com/Netflix
-cd $GOPATH/src/github.com/Netflix
-git clone https://github.com/Netflix/titus-vpc-driver.git
-cd titus-vpc-driver
-go build
-./gradlew clean buildDeb
-```
 
-# Metadata Service
-```
-mkdir -p $GOPATH/src/github.com/Netflix
-cd $GOPATH/src/github.com/Netflix
-git clone https://github.com/Netflix/titus-metadata-service.git
-cd titus-metadata-service
-make build
-./gradlew clean buildDeb
-```
 
 # Titus Api Definitions
 ```
