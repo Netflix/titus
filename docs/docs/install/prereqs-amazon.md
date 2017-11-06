@@ -46,6 +46,12 @@ For inbound and outbound
 
 - Up to your application needs
 
+# Overview of the applied security groups
+
+Eventually this is how the security groups you created will be used
+
+<img src="../../images/secgroups-arch.png" />
+
 # Creating IAM Roles
 
 Three IAM roles are needed. We are naming them `titusmasterInstanceProfile' and 'titusappwiths3InstanceProfile'
@@ -95,6 +101,6 @@ and one without to be able to test the IAM role support feature.
 
 # Overview of the applied IAM Roles
 
-Eventually this is how the IAM roles your created will be used
+Eventually this is how the IAM roles you created will be used
 
 <img src="../../images/iamroles-arch.jpg" />
