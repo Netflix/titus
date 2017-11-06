@@ -1,3 +1,6 @@
+# Subnets
+The Titus agent must run in a "private subnet" (Amazon terminology), or a Subnet which does not rely on 1:1 NAT for communication across the VPC boundary. This is because the Titus VPC integration code sets up agent IPs in the same subnet that the agent is spawned in, and the containers use secondary Private IPs. The driver does not set up any kind of NAT on these secondary IPs, so they are without 
+
 # Creating security groups
 
 Two security groups are needed. We are naming them `titusapp` and `titusmaster-mainvpc`:
