@@ -93,4 +93,8 @@ The Trust relationship should look like:
 For permissions, pick two sets of permissions that matter to your apps. We created one with S3 read access
 and one without to be able to test the IAM role support feature.
 
+# Overview of the applied IAM Roles
 
+Eventually this is how the IAM roles your created will be used
+
+<img src="../../images/iamroles-arch.jpg" />
