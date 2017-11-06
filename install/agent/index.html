@@ -365,75 +365,152 @@
                   <a href="https://github.com/Netflix/titus/edit/master/docs/install/agent.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
                 
                 
-                <h1 id="launch-agents-in-internal-vpc-subnets">Launch agents in internal VPC subnets</h1>
-<p>Currently Titus only sets up private IP's for containers. Therefore, it will not work properly if you launch
-agents in external VPC's. While it will launch containers, the public IP will not have network access.</p>
-<h1 id="creating-a-titus-agent-launch-configuration-and-asg">Creating a Titus agent launch configuration and ASG</h1>
-<p>When Spinnaker creates agent deployments, it creates the following user data in the launch config for an ASG. The
-agent processes depend on these being right.</p>
-<pre><code>NETFLIX_ACCOUNT=&quot;test&quot;
-NETFLIX_ACCOUNT_TYPE=&quot;main&quot;
-NETFLIX_ENVIRONMENT=&quot;test&quot;
-NETFLIX_APP=&quot;titusagent&quot;
-NETFLIX_APPUSER=&quot;titusagent&quot;
-NETFLIX_STACK=&quot;mainvpc&quot;
-NETFLIX_CLUSTER=&quot;titusagent-mainvpc-m4.4xlarge.2&quot;
-NETFLIX_DETAIL=&quot;m4.4xlarge.2&quot;
-NETFLIX_AUTO_SCALE_GROUP=&quot;titusagent-mainvpc-m4.4xlarge.2-v004&quot;
-NETFLIX_LAUNCH_CONFIG=&quot;titusagent-mainvpc-m4.4xlarge.2-v004-07202017195940&quot;
-EC2_REGION=&quot;eu-west-1&quot;
-</code></pre>
-
-<h1 id="upgrade-ubuntu">Upgrade Ubuntu</h1>
-<p><strong>NO NOT UPGRADE UBUNTU</strong> - This seems to be be breaking the vpc driver currently.</p>
-<pre><code>sudo su
+                <h1 id="using-cloud-init">Using Cloud-init</h1>
+<p>We recommend that you use the following cloud-init config with Ubuntu 16.04. Just make sure you've added an IAM role to your profile: <a href="../cloud-init.yml">cloud-init</a>. There are a few fields we recommend filling in for yourself here. For example, you should fill in your SSH keys, and not ours. Also, you should configure the <code>/etc/mesos-attributes.sh</code> config file that's included in the cloud-init to be suited for your instance. The mesos-specific configuration that needs to be adjusted is the <code>stack</code>, <code>asg</code>, and <code>Res</code> attributes. The specifics of the <code>Res</code> attribute, and how it refers to how your ENIs work is explained below.</p>
+<p>In order to use cloud-init, you need to go ahead and paste the linked yaml file into your Ubuntu 16.04 VM's user data.</p>
+<h1 id="manual-install">Manual Install</h1>
+<p>This is for advanced users only. We do not recommend using these instructions unless you're running a customized system. We also recommend looking at the cloud-init as the reference for canonical configuration files.</p>
+<h2 id="linux">Linux</h2>
+<p>We recommend Ubuntu Linux, Xenial, with a 4.4 or newer version for running Titus. We also recommend this for developing Titus agent itself. We recommend using XFS or Btrfs for the storage of the Docker daemon itself, and separating out the storage of the agent "Control Plane" components versus the non-control plane components. </p>
+<h2 id="install-packagecloud-repo">Install Packagecloud Repo</h2>
+<p>Run the following commands:</p>
+<pre><code>curl -s https://8095c452e9473a3fae3ea86a6f2572c2cde0d7b5ec63e84f:@packagecloud.io/install/repositories/netflix/titus/script.deb.sh | sudo bash
 apt-get update
-apt-get upgrade
-apt-get dist-upgrade
-shutdown -r now
 </code></pre>
 
-<h1 id="install-docker">Install Docker</h1>
+<h2 id="install-docker">Install Docker</h2>
 <p>Install docker as instructed <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository">here</a></p>
 <ul>
 <li>Add the current user to docker group <code>sudo gpasswd -a $USER docker</code>, log out and then log back in.</li>
-<li>Update <code>/etc/docker/daemon.json</code> to include <code>{"iptables": false}</code> and restart the instance.<ul>
-<li>Instead of restarting the instance, you can also restart just the Docker daemon and update the IP tables with <code>sudo iptables -A FORWARD -j ACCEPT</code></li>
 </ul>
-</li>
-</ul>
-<h1 id="mesos-slave">Mesos-slave</h1>
-<p>We run mesos-slave through startup scripts. To make running Titus easier, you can run via a Docker image instead.</p>
+<p>You can add the following drop-in systemd unit to configure Docker for your needs:</p>
+<pre><code># /etc/systemd/system/docker.service.d/10-docker-config.conf
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd --log-level=debug -H fd:// --init-path=/apps/titus-executor/bin/tini-static --iptables=false --storage-driver=overlay2
+Restart=always
+StartLimitInterval=0
+RestartSec=5
+</code></pre>
+
+<p>You should also configure the Docker TCP Proxy, with the following systemd units:</p>
+<h3 id="docker-tcp-proxyservice">docker-tcp-proxy.service</h3>
+<pre><code># /lib/systemd/system/docker-tcp-proxy.service
+[Unit]
+Description=Docker Unix Socket TCP Proxy
+Requires=docker.socket
+Requires=docker-tcp-proxy.socket
+After=docker.socket
+After=docker-tcp-proxy.socket
+
+[Service]
+ExecStart=/lib/systemd/systemd-socket-proxyd /var/run/docker.sock
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+<h3 id="docker-tcp-proxysocket">docker-tcp-proxy.socket</h3>
+<pre><code># /lib/systemd/system/docker-tcp-proxy.socket
+[Unit]
+Requires=docker.socket
+After=docker.socket
+
+[Socket]
+ListenStream=0.0.0.0:4243
+
+[Install]
+WantedBy=sockets.target
+</code></pre>
+
+<p>Once you've done this, we recommend restarting docker, enabling these systemd units to restart on every boot.</p>
+<h1 id="mesos-agent">Mesos-agent</h1>
+<p>You can download Mesos from Mesosphere's OSS site here: https://open.mesosphere.com/downloads/mesos/#apache-mesos-1.1.3, we recommend installing 1.1.3. You can download the deb directly <a href="../here">http://repos.mesosphere.com/ubuntu/pool/main/m/mesos/mesos_1.1.3-2.0.1.ubuntu1604_amd64.deb</a>.</p>
+<p>Unfortunately, Mesos does not come with a systemd unit file out of the box, so we have one that you can adapt to your own needs:</p>
+<pre><code># /lib/systemd/system/mesos-agent.service
+[Unit]
+Description=Mesos
+Wants=docker.service
+After=docker.service
+Conflicts=halt.target shutdown.target sigpwr.target
+
+[Service]
+ExecStartPre=/bin/mkdir -p /var/lib/mesos
+EnvironmentFile=/etc/mesos-agent.config
+ExecStart=/usr/sbin/mesos-agent
+ExecStopPost=/bin/rm -rf /var/lib/mesos/meta/slaves/latest
+Restart=always
+StartLimitInterval=0
+RestartSec=5
+LimitNOFILE=65535
+KillMode=mixed
+KillSignal=SIGUSR1
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+<p>Our <code>/etc/mesos-agent.config</code> includes the following:</p>
+<pre><code>MESOS_MASTER=zk://1.1.1.1:2181,2.2.2.2:2181/titus/devvpc7/mesos
+MESOS_PORT=7101
+MESOS_RECOVER=reconnect
+MESOS_WORK_DIR=/var/lib/mesos
+MESOS_STRICT=false
+MESOS_RESOURCES=ports:[7150-7200];mem:230400;disk:523264;network:9000
+MESOS_ATTRIBUTES=region:us-east-1;asg:titusagent-devvpc7-r4.8xlarge-v072;stack:devvpc7;zone:us-east-1c;itype:r4.8xlarge;cluster:titusagent-devvpc7-r4.8xlarge;id:i-0d736710f99b183f1;res:ResourceSet-ENIs-7-29;distcodename:xenial;distrelease:16.04
+</code></pre>
+
+<p>Of course, adapt the configuration file to your needs. The Mesos attributes are broken down as below:</p>
 <ul>
-<li><code>docker run --rm --name mesosslave -v /apps/:/apps/ -v /etc/titus-executor/:/etc/titus-executor/ -v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host -d mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404 mesos-slave --master=zk://172.31.43.195:2181/titus/mainvpc/mesos --log_dir=/var/log/mesos/ --work_dir=/apps/mesos --logging_level=INFO --resources="network:1000" --attributes="region:hackday;asg:titusagent-m4.xlarge;stack:hackday;zone:hackdayd;itype:m4.xlarge;cluster:titusagent-hackday;id:l-deadbeef;res:ResourceSet-ENIs-7-29"</code><ul>
-<li><strong>TODO</strong>: integrate gen_env.sh </li>
+<li>region: AWS region</li>
+<li>asg: AWS ASG name</li>
+<li>stack: Which (isolated) Titus environment</li>
+<li>zone: Which AWS availabilityzone</li>
+<li>itype: What AWS instance type</li>
+<li>cluster: This is an internal naming convention of titusagent-${stack}-${custom}</li>
+<li>id: EC2 instance identifier</li>
+<li>res: Special construction to signal to the Titus master how many ENIs this instance type can handle, for example "ResourceSet-ENIs-7-29", means that this machine can have 7 additional ENIs, and 29 IPs per ENI.</li>
 </ul>
-</li>
-</ul>
+<h1 id="vpc-driver">VPC Driver</h1>
+<p>Install the VPC Driver from the repo. The name of the package is <code>titus-vpc-driver</code>.
+<em> Add <code>net.ifnames=0</code> to GRUB_CMDLINE_LINUX= in <code>/etc/default/grub</code> and then run <code>sudo update-grub</code>.
+</em> Remove the <code>/etc/udev/rules.d/70-persistent-net.rules</code> file and then run <code>sudo reboot</code>.
+* After reboot, the default interface should be named <code>eth0</code> instead of the previous <code>ens3</code>.</p>
 <h1 id="titus-executor">titus-executor</h1>
-<ul>
-<li>dpkg -i titus-agent_0.0.1-1_all.deb</li>
-</ul>
-<h1 id="titus-vpc-driver">titus-vpc-driver</h1>
-<ul>
-<li>dpkg -i --force-overwrite titus-vpc-driver_0.0.1-1_all.deb<ul>
-<li>We use <code>--force-overwrite</code> flag to ensure all files are updated.</li>
-</ul>
-</li>
-<li>Setup networking so that interface names use the legacy <code>eth</code> prefix convention.<ul>
-<li>Add <code>net.ifnames=0</code> to GRUB_CMDLINE_LINUX= in <code>/etc/default/grub</code> and then run <code>sudo update-grub</code>.</li>
-<li>Remove the <code>/etc/udev/rules.d/70-persistent-net.rules</code> file and then run <code>sudo reboot</code>.</li>
-<li>After reboot, the default interface should be named <code>eth0</code> instead of the previous <code>ens3</code>.</li>
-</ul>
-</li>
-<li>Run <code>sudo /apps/titus-vpc-driver/bin/run</code> to start the driver. Since all of the other
-  components are in the host network, it should be fine to run it from the host.</li>
-</ul>
-<h1 id="titus-metadata-service">titus-metadata-service</h1>
-<ul>
-<li>dpkg -i titus-metadata-service_0.0.1-1_all.deb</li>
-<li>Run <code>sudo /apps/titus-metadata-service/bin/run</code> to start the proxy</li>
-</ul>
+<p>Install the VPC Driver from the repo. The name of the package is <code>titus-executor</code>.</p>
+<p>You need to configure it with a configuration file at <code>/etc/titus-executor/config.json</code>. The configuration file looks like below:</p>
+<pre><code>{
+  &quot;stack&quot;: &quot;mainvpc&quot;,
+  &quot;docker&quot;: {
+    &quot;host&quot;: &quot;tcp://127.0.0.1:4243&quot;,
+    &quot;registry&quot;: &quot;docker.io&quot;
+  },
+  &quot;uploaders&quot;: {
+     },
+  &quot;env&quot;: {
+    &quot;copiedFromHost&quot;: [
+      &quot;NETFLIX_ENVIRONMENT&quot;,
+      &quot;NETFLIX_ACCOUNT&quot;,
+      &quot;NETFLIX_STACK&quot;,
+      &quot;EC2_INSTANCE_ID&quot;,
+      &quot;EC2_REGION&quot;,
+      &quot;EC2_AVAILABILITY_ZONE&quot;,
+      &quot;EC2_OWNER_ID&quot;,
+      &quot;EC2_VPC_ID&quot;,
+      &quot;EC2_RESERVATION_ID&quot;
+    ],
+    &quot;hardCoded&quot;: {
+      &quot;NETFLIX_APPUSER&quot;: &quot;appuser&quot;,
+      &quot;EC2_DOMAIN&quot;: &quot;amazonaws.com&quot;
+    }
+  },
+  &quot;statusCheckFrequency&quot;: &quot;10s&quot;,
+  &quot;useNewNetworkDriver&quot;: true,
+  &quot;usePrivilegedTasks&quot;: false,
+  &quot;useMetatron&quot;: true,
+  &quot;logsTmpDir&quot;: &quot;/var/lib/titus-container-logs&quot;
+}
+</code></pre>
                 
                   
                 
