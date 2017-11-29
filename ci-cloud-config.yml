@@ -1,0 +1,198 @@
+#cloud-config
+ssh_authorized_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOBNR3nYWyQZTgnaKmUEkV2EmR/BVXq6RMYn4F1ErMb3KVOpsIi6dGQoQhwEhE4+acUl/V3qhUnRyheaGGGWx8qGan4StWMRmfPCqIqv+XDurv/Tzxqt1sqGnKAF6sZR1SA5ryzPMJTFyv8lp69Bm4oY0EfCWdI6MoTOrr5WsgocNR8pKMAFakhOTRhfs6c7eyFyIxDXKYA/Z4f1++gGUtcMNBI/qfAcs1MytSEryVdGf6z1kZffsA1gGdy5yTiQnOTSQMVdKWnAemRK1s9rDbkw3VOSEMCI21d8gx9MsliNb/+BFojhSROANmk6XXVZD5l9Bli6qUg3crjVt2QqlR sdhillon@nfml-sdhillon37G
+apt:
+    sources:
+#        packagecloud:
+#            source: "deb https://packagecloud.io/netflix/titus-agent-ci/ubuntu/ artful main"
+#            keyid: "AB79650BE082E677"
+        docker:
+            source: "deb [arch=amd64] https://download.docker.com/linux/ubuntu zesty stable"
+            keyid: "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
+        buildkite:
+            source: "deb https://apt.buildkite.com/buildkite-agent unstable main"
+            keyid: "32A37959C2FA5C3C99EFBC32A79206696452D198"
+
+packages:
+    - buildkite-agent
+    - docker-ce
+    - build-essential
+    - ruby
+    - ruby-dev
+    - ruby-bundler
+
+package_update: true
+
+system_info:
+  network:
+    renderers: ['netplan', 'eni', 'sysconfig']
+    
+
+network:
+  version: 2
+  ethernets:
+    id0:
+        match:
+            name: e*
+        dhcp4: true
+        dhcp6: true
+    
+write_files:
+    - path: /etc/systemd/system/buildkite-agent.service.d/10-user.conf
+      content: |
+                [Service]
+                User=root
+                Environment=HOME=/root
+    - path: /etc/docker/daemon.json
+      content: |
+                {
+                    "storage-driver": "vfs"
+                }
+    - path: /etc/buildkite-agent/hooks/environment
+      permissions: '0755'
+      content: |
+                #!/bin/bash
+
+                set -eu -o pipefail
+                repo_name=$(basename $(echo $BUILDKITE_REPO|cut -f2 -d:) .git)
+                export GIT_SSH_COMMAND="ssh -i /root/.ssh/${repo_name}"
+
+    - path: /root/.ssh/titus-executor
+      permissions: '0600'
+      content: |
+                -----BEGIN RSA PRIVATE KEY-----
+                MIIEpQIBAAKCAQEA3330iCZKjL+lwxODErJIgQEoLc2JHkILLmUmuioi6kuw2QeT
+                trcZ/YJBoB81MrK94Q7HzZqYT/W6PddChMXiD/5rR2Y/0ybEa3ZH+VimbaTGih//
+                GSYjTb8GKHHEy/pl0XidMrOPhXTUvAtZ5FvSXKrwo4F8AV8xbyev38XGvU2rh+Ls
+                keaGV/ziOwGff6B278RtvBGuC6e3XFSCGzHVA7K/JwSPwjt3sxEIbI0N/jvcjq2n
+                nJNyBgXcxYYl3UXe3t49aF8CPu+y5t+zfEcbVXUR0HL/0jEpxd3me1WlLts1IsaG
+                vVj7nU0Ebc7UKiR0NscOGZMMYrnjG03dmaWePwIDAQABAoIBAQCj6Nur8vFgErp+
+                vNO3pZu5SWDvXru+vk83AqaJiJe84DBeq8jxC477N0nsJpc8jIzn/5AYQdaNZjnm
+                WvaFLCAk/MIvRlVvBhKugbw9qn+9EEkwSlEsX6UqwvvAM9hShV2haGVaJwkOpuXS
+                2DxgV9uLbS85q6CH3QoDbMb3RjUA5hPiU87JKu7yqq/edH/dohJdRFhoL4QP2WfH
+                sVxruTJG4srgsg9gGRiuks0+2hHx5DE0fcMOPeRuV4LjSFmuw6XFjs04vdP8fQ2m
+                drEKWaj2BTS+f9WtNCQPkZCqjScXFLLsgiFG6uyUxpVup/jkLHAaP4SjvmNBsvLn
+                edeToAtJAoGBAPeytFO1mnMIGgRz9e+hAZniqVYmA1Ucdhfz7snB8AEdpEroyQYM
+                Bt+eBHATemQoXUa3YngVdqKc+ajCJeOA1LtTjX3i4Ies6AMaG9IWP1V8jmtqXnOX
+                m+zusfdxbaBUBPeSioJQaWM4pqry2u659hn0yniBriq83/jwOuUnnE+zAoGBAOb7
+                jvDSUUilBrPzY5OxmAezcox8gc5EUDvfa17aeIr/5f+EwDCe8ZpxhijSIO2H11CM
+                wpgozvs4xaLcjB1cJFVU6U+Kzc63VCG9IvGW+UNI0V+W7EwePQJRkry+Vxz0S/7j
+                zQ3UyfPzZk1EJm10tjspA7YXiM8Mb8Gv/n8hQdFFAoGAe4p/FE08dmkxCM2JeXY1
+                ZTo+uUAGY3npkLLSg4CeIwBUxCPst35iI0Ad+IROhAv50d5/V2NlI1/lyXzkBt9n
+                uvLGXGY/FIxxv7JS8+qytgGEyyBncYHJfFflHYROaCvfulc1jB9tINbNke/EsFLB
+                41pLbeVIJ/rCPtgal9a0yK8CgYEAxDek2Q1BQb328L1stNWj+b7GK3PFbWz437PO
+                6VgcGLCEOMkT3vnW8kVIG7tNf5rrHSFGWa4pDp7OvagvWu2ga+DjBdA7P0TbsoGS
+                grqm6zKbsmFqQMtbNnIHflEPfahGOrRXyE0gdh0ppa+kGU2RVLZl0bUyYfkFovsX
+                7fVZjSUCgYEAoPid1t3mz8vJujia1rgcv6AKltJFXmiOy9FxtmmdsYcMXdV15gC3
+                H13++nNZesCy+UgPTOdBKxfYSWdgL8Anvyj3q+c0UCayAMzx5whAvCboGYno+ErO
+                MMEZ5W7dkdxPC6xAybfEjNthUi2VNa8EgpDT/z7rc+71ElbuXaa/66o=
+                -----END RSA PRIVATE KEY-----
+    - path: /root/.ssh/titus-upload-debs
+      permissions: '0600'      
+      content: |
+                -----BEGIN RSA PRIVATE KEY-----
+                MIIEowIBAAKCAQEAviM6i8rqwQbDD27j32AA0SjN6npj43JowXLftDKrUnYx9dsZ
+                m7bDDtmo7Mjq9WPzvy4Pmu4EWRu0mvNZxci1+5qHj58C+CLG+6e8QmeHcmWFRKjp
+                7J5dPHfpiaxzvbb/hP+nv6xCc742NoQp1rUVjHa7w70DPZj24kUkWyguvtXK95Hu
+                ler80M93BNpGOBEWcn/fcHrHNxawyoMPZ1nDsnPxBZKHbc7GT+arWJFcVkMGgNsJ
+                EWD7QLKmjf+yz+C1Yb+B4Tle8OicR+bTfpMJutCeqGPUPqBHRvTAxCHQYKPwGZR3
+                pUnFi8SgKJdXVKesg5sXXlbugshPvFFj13/TZwIDAQABAoIBAHSY6+Uf6Xe3atTC
+                /rBTkgyxhhzdMvYeicjfZfl9/PuTia2nz3tixxkLNwEFcLhMtAOv/lfW0AnI6KcA
+                xjN4ksiZCbp0G4EI6pcWVGcwT6pCQUhKgTDeKHTVX/xSKaPUXbs0f60VuKZ7pYkm
+                4PVOlMlPYnN1LFCQxg0Zs2LHMGtLZbzOY8IgjojZVt+4p3hInEqKS8TpGxg/DsUi
+                lHZwBXnMRqIt3zbEL1Hbpr6Z3T+XnTpNMqakJIVNWinDnXhyNPXuIqI8qMigky8n
+                rU6v/vwQMt1wN3Z2iOqpCDkAAPvlj0ncjpJ9YIYBID3fNUjdhEYfG51HoGanbsVw
+                lfuIrakCgYEA88e1cXnhy/oZHHOeugSwZckDiZXRCP/VeLkxOZ6tBki/RoBeDDQF
+                K6nhLNxwpQUW0bNNoLsIKbXTuS7KkdKvdlKr/gRUUetgxbo42wjV2ls16OC6rLbk
+                z5BcIHjEqHpCjzXITTVVjEmF2r3sTck2FsO33dRpOW24D7sHlF3CURUCgYEAx6so
+                A1bT/dNyA0r7YeYIqSamiLQqBsXtRr4gY1rXggpK5CB32NCMPgYEHUWuLGfc90BI
+                ypGOdv3RBm/Nc2pJDe7u3y+Pu3WlHYj0OKQG81sZgoLJ8oJZiMor1diQZt32WAUu
+                498J/vPfRaLuO32aaKWGyVL5Txkt8z39wEn32YsCgYEA8L24IWgL5DQHuGE1zt3y
+                lZH9PFIHLKv5VE8Onahlll8hBa6fMc3tjUEmbfcEBvMPpec8Mg6B8S7u92GOCpPV
+                UzQxRZlg68VWu+07WJNRHWIVyvSjZQz4yUH2uNqK2xZhxKuIMzcIVJIG7g3A3tBl
+                6fU+DoNFpsEDlAVPZuVwkEECgYBbTugDbuePAez3mIiQ4nM/d09c4Jb/de/mE/gX
+                t2kqLK7G2Bo2alhX3MRw5naaE/02jI09JYcy3yuBeAtKJma2GnfeVI+0OD6D3Sdh
+                55DOJPDrgAf+AKIVLe8R4fFXOVX4NpaU2mBl2PxXigTL68p65IdY9brQ80DSJZ0v
+                HCRdtQKBgHiQB6iA9bM+GB1QzQCRH6Nm/r2pUCSIH9cgi7sHxBfyIfnnM+w98/Ru
+                8MbzcpLK86dl4tgqJEuF7Kh2dJ6Et9jnku4AFVp3pVu93NhWAU1y/19pnM4dKcG8
+                PNfwl/k/21lRGh+soYq5PXHB+CoDB2N7vsLaBqA8iTAQ5+DUot8y
+                -----END RSA PRIVATE KEY-----
+    - path: /root/.ssh/titus-vpc-driver
+      permissions: '0600'      
+      content: |
+                -----BEGIN RSA PRIVATE KEY-----
+                MIIEowIBAAKCAQEAv0JZbPWjDBmhMjkJqwHFW5tPybV6KnRUT5W6BGclfAxH5ZSE
+                5Jyvh8YMlPdUtOc/8+MCk4ec8lFsWyYyPYACp/xN041ofg1VSnEqy3dWDDitOLop
+                qYGMME5upJ0F5tfThxlMolpFzwS+LEi5Y02eFRhsPx0qNgy3LsnV3L/gY+rdZDcM
+                ucP1FoGaWdKuZZmMQPb+TokGJW5iC9aBlHZqitZovZOXud/BXdaPXw9rv6wosre3
+                CVNVkLDogMt/quFvxYT8D8wNp4agjj8+YWIA0NNIN9drOFLhfBjY9cMieKVqG+0Z
+                i/WKPgRsZFcDVifXUjLBnFTUYrp9/TcYhqv0HwIDAQABAoIBAQCZ+7U7wFhROaFK
+                ahmakIZwxo5qe62r2JS4rndhbBoF0W1hLT4BQRUhXxZqKOcN7tDSboZ4eMqnXV67
+                0/jHAvUggkW2eTcTpXBxysMFpUKl/EuaTGeWjTJtAfial8FUpZcsQfYtEDj7/3mM
+                9dAsXyVTHqKn/bcqZPpmtSF15RWn2t5UkXDRJpg685TeE6c0YvlJcEM3IgIq651s
+                Frpd6EgiEovvhvR+o+Xs2r6Lwau7wmc1vAdTGedQZAgIELqttLwGs9Y+AqXcbncb
+                958W6Usif5GmC4OlVR+/mX3hYL7iD84swxmgC8w/qs92i8Tjmt9x5HDycyb6hfu1
+                mDBBmkphAoGBAPFniRS3kTPRR7V5fPjsmeq7IjocTO5dI4+3cRzaVZbAbreiI6xt
+                LIaHTd7GaCue8KX8h8dX7yy6VUi1McT1PbVc479MXpTuYyW80Xvrk4Ub2kHbqDT/
+                iqy+vIKeSDLadX1ADBJQUs8HHWkkfkvg7MHl5afRT2yVP0gyHWxaaQKVAoGBAMrS
+                qgW8fZUSoe/QXDQ9d1h92OWeSbXeY22gloBIO+3hwh6XpgG+97cKTxyVx66u/v6M
+                VGWxWLKUC/mhccasBDZTg/d9f8/dqUtgCe8GsttdqoqhrQUx92YllzEpvoKw9dai
+                i0aZ/IbgPAor0nNrX4P7ZAuwfbQfeM/tWrxeg4LjAoGAQmjWKDHbqyKelIjoXV5R
+                dWanos7YRxauSsIPRv21X/RuQOxE3hFml1evj2KLk7x0vWT8QVWqgWZ9QbQ/Dczd
+                fgAg0yaCOnxeICqSgoGrIoon/8gavQGzt5P9Lf23JO4+NgehioQ4U6XEbIFSkTM+
+                TpUdGY6WR+vC7eyDdaRlkQUCgYAReSCoqdpv01EcJekrnvf/Kahb780N3ADY2vLc
+                TlzLW52roQjuMZOJs1upbMXtKKpTJ6fFswefKt31PZFdukgKnhtKYQd30vLYyYdR
+                jlQuTd15YABV6D4WELr7w0rkW3ZybUJubKmyvPKvNaNFykRKTIgL8cKCmAuCbkJY
+                5BOUXQKBgFJAY9hDR5Hl94WoUQP0z2hbHn7sivs5oosRGwc+zX76vZxXVWJ8Z+dl
+                fCfG7YfFzv+ELqMqTVfUtdd+UEjZqDoJLZHCcNbhzj1m/T4+nEMNfTJaKMUhHCfO
+                O+Brmi+oWJCaNFu0FRI94dveH6ms1rp8rortNborGaLKbjtjb3Rn
+                -----END RSA PRIVATE KEY-----
+    - path: /etc/buildkite-agent/buildkite-agent.cfg
+      permissions: '0644'
+      content: |
+                # The token from your Buildkite "Agents" page
+                token="#####PUT_BUILDKITE_TOKEN_HERE#####"
+
+                # The name of the agent
+                name="%hostname-%n"
+
+                # The priority of the agent (higher priorities are assigned work first)
+                # priority=1
+
+                # Meta-data for the agent (default is "queue=default")
+                # meta-data="key1=val2,key2=val2"
+
+                # Include the host's EC2 meta-data (instance-id, instance-type, and ami-id) as meta-data
+                meta-data-ec2=true
+
+                # Include the host's EC2 tags as meta-data
+                meta-data-ec2-tags=true
+
+                # Path to where the builds will run from
+                build-path="/var/lib/buildkite-agent/builds"
+
+                # Directory where the hook scripts are found
+                hooks-path="/etc/buildkite-agent/hooks"
+
+                # Do not run jobs within a pseudo terminal
+                # no-pty=true
+
+                # Don't automatically verify SSH fingerprints
+                # no-automatic-ssh-fingerprint-verification=true
+
+                # Don't allow this agent to run arbitrary console commands
+                # no-command-eval=true
+
+                # Enable debug mode
+                # debug=true
+
+                # Don't show colors in logging
+                # no-color=true
+runcmd:
+    - "curl -sSfL https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz | tar -C /usr/local -xz"
+    - [gem, update, --system]
+    - [systemctl, daemon-reload]
+    - [systemctl, enable, buildkite-agent]
+    - [systemctl, start, buildkite-agent]
+    - [systemctl, enable, docker]
+    - [systemctl, start, docker]
