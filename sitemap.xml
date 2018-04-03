@@ -3,6 +3,14 @@
 
     
     <url>
+     <loc>/</loc>
+     <lastmod>2018-04-03</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
      <loc>/overview/</loc>
      <lastmod>2018-04-03</lastmod>
      <changefreq>daily</changefreq>
@@ -53,6 +61,14 @@
      <changefreq>daily</changefreq>
     </url>
         
+    
+
+    
+    <url>
+     <loc>/contributing/</loc>
+     <lastmod>2018-04-03</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
     
 
     

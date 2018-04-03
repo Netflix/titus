@@ -61,7 +61,7 @@
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
         
-          <a href="./" title="Titus" class="md-icon md-icon--home md-header-nav__button">
+          <a href=".." title="Titus" class="md-icon md-icon--home md-header-nav__button">
           </a>
         
       </div>
@@ -179,6 +179,18 @@
       
       
 
+
+  <li class="md-nav__item">
+    <a href=".." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
   
 
 
@@ -233,6 +245,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#titus-master" title="Titus Master" class="md-nav__link">
+    Titus Master
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#titus-agent" title="Titus Agent" class="md-nav__link">
+    Titus Agent
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -271,13 +297,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
-    <label class="md-nav__link" for="nav-3">
+    <label class="md-nav__link" for="nav-4">
       Deployment
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-3">
+      <label class="md-nav__title" for="nav-4">
         Deployment
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -343,13 +369,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
-    <label class="md-nav__link" for="nav-4">
+    <label class="md-nav__link" for="nav-5">
       Testing
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-4">
+      <label class="md-nav__title" for="nav-5">
         Testing
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -369,6 +395,18 @@
         
       </ul>
     </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../contributing/" title="Contributing" class="md-nav__link">
+      Contributing
+    </a>
   </li>
 
     
@@ -428,6 +466,20 @@
           <li class="md-nav__item">
   <a href="#titus-gateway" title="Titus Gateway" class="md-nav__link">
     Titus Gateway
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#titus-master" title="Titus Master" class="md-nav__link">
+    Titus Master
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#titus-agent" title="Titus Agent" class="md-nav__link">
+    Titus Agent
   </a>
   
 </li>
@@ -493,13 +545,13 @@ tasks onto Titus agents that launch containers based on the task's job specifica
 <h4 id="titus-gateway">Titus Gateway</h4>
 <p>The Titus Gateway is a scalable API tier that handles direct requests from clients and users. The Gateway exposes gRPC
  and REST APIs, handles connection management, and performs validation.</p>
-<p>#### Titus Master
- The Titus Master is responsible for persisting job and task information, scheduling tasks, and managing the
+<h4 id="titus-master">Titus Master</h4>
+<p>The Titus Master is responsible for persisting job and task information, scheduling tasks, and managing the
  pool of EC2 Agents. The Master receives requests from Gateway instances and creates and persists job and task info
  in response. The Master schedules tasks onto Agents with available resources and scales the pool of Titus Agents
  up or down in response to demand.</p>
-<p>#### Titus Agent
- Titus Agents are responsible for setting up and running task containers and managing their lifecycle. The Agent
+<h4 id="titus-agent">Titus Agent</h4>
+<p>Titus Agents are responsible for setting up and running task containers and managing their lifecycle. The Agent
  sets up on host resources, such as storage and networking resources, and launches the container using Docker. The
  Agent monitors the task, reporting status and cleaning up resources when it completes.</p>
                 
@@ -519,6 +571,20 @@ tasks onto Titus agents that launch containers based on the task's job specifica
   
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
+        
+          <a href=".." title="Introduction" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Introduction
+              </span>
+            </div>
+          </a>
         
         
           <a href="../build/" title="Building the Code" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
