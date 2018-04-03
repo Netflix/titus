@@ -3,7 +3,7 @@ repo_url: https://github.com/Netflix/titus
 strict: True
 
 pages:
-- 'Introduction': index.md
+- 'Overview': overview.md
 - 'Building the Code': build.md
 - 'Deployment':
   - 'Prereqs': install/prereqs.md
