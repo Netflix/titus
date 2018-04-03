@@ -39,13 +39,15 @@ tasks onto Titus agents that launch containers based on the task's job specifica
 The Titus Gateway is a scalable API tier that handles direct requests from clients and users. The Gateway exposes gRPC
  and REST APIs, handles connection management, and performs validation.
  
- #### Titus Master
- The Titus Master is responsible for persisting job and task information, scheduling tasks, and managing the
+ 
+#### Titus Master
+The Titus Master is responsible for persisting job and task information, scheduling tasks, and managing the
  pool of EC2 Agents. The Master receives requests from Gateway instances and creates and persists job and task info
  in response. The Master schedules tasks onto Agents with available resources and scales the pool of Titus Agents
  up or down in response to demand.
  
- #### Titus Agent
- Titus Agents are responsible for setting up and running task containers and managing their lifecycle. The Agent
+ 
+#### Titus Agent
+Titus Agents are responsible for setting up and running task containers and managing their lifecycle. The Agent
  sets up on host resources, such as storage and networking resources, and launches the container using Docker. The
  Agent monitors the task, reporting status and cleaning up resources when it completes.

@@ -3,6 +3,7 @@ repo_url: https://github.com/Netflix/titus
 strict: True
 
 pages:
+- 'Introduction': index.md
 - 'Overview': overview.md
 - 'Building the Code': build.md
 - 'Deployment':
@@ -12,5 +13,6 @@ pages:
   - 'Agent': install/agent.md
 - 'Testing':
   - 'Basic batch task': test/batch.md
+- 'Contributing': contributing.md
 - 'FAQ': faq.md
 theme: material
