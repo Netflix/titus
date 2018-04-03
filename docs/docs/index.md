@@ -5,6 +5,7 @@ cloud-native integration with Amazon AWS. Titus was built internally at Netflix 
 to power Netflix streaming, recommendation, and content systems.
 
 Titus provides the following:
+
 - __A production ready container platform__. Titus is run in production at Netflix, managing thousands of AWS EC2
 instances and launching hundreds of thousands of containers daily for both batch and service workloads.
 - __Cloud-native integrations with AWS__. Titus integrates with AWS services, such as VPC networking, IAM and Security Group
