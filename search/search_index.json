@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/", 
-            "text": "Titus\n\n\nTitus is a container management platform that provides scalable and reliable container execution and\ncloud-native integration with Amazon AWS. Titus was built internally at Netflix and is used in production\nto power Netflix streaming, recommendation, and content systems.\n\n\nTitus provides the following:\n\n\n\n\nA production ready container platform\n. Titus is run in production at Netflix, managing thousands of AWS EC2\ninstances and launching hundreds of thousands of containers daily for both batch and service workloads.\n\n\nCloud-native integrations with AWS\n. Titus integrates with AWS services, such as VPC networking, IAM and Security Group\nconcepts, Application Load Balancing, and EC2 capacity management. These integrations enable many cloud\nservices to work seamlessly with containers.\n\n\nNetflix OSS integration\n. Titus works natively with many existing Netflix OSS projects, including\n\nSpinnaker\n, \nEureka\n,\n\nArchaius\n, and \nAtlas\n among others.\n\n\nDocker-native container execution\n.  Titus can run images packaged as Docker containers while providing\nadditional security and reliability around container execution.\n\n\n\n\nArchitectural Overview\n\n\nAn overview of how Titus works is provided \nhere\n.\n\n\nGetting Started\n\n\nYou can find out about building Titus \nhere\n and deploying \nhere\n.\n\n\nLearn More About Titus\n\n\n\n\nTitus: Introducing Containers to the Netflix Cloud\n\n\nThe Evolution of Container Usage at Netflix\n\n\nRunning Container at Scale at Netflix\n\n\nA Series of Unfortunate Container Events\n\n\n\n\nContributing\n\n\nRefer to \ncontibuting.md\n\n\nLicense\n\n\nCopyright 2018 Netflix, Inc.\n\n\nLicensed under the Apache License, Version 2.0 (the \u201cLicense\u201d); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \u201cAS IS\u201d BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.", 
+            "text": "Titus\n\n\nTitus is a container management platform that provides scalable and reliable container execution and\ncloud-native integration with Amazon AWS. Titus was built internally at Netflix and is used in production\nto power Netflix streaming, recommendation, and content systems.\n\n\nTitus provides the following:\n\n\n\n\nA production ready container platform\n. Titus is run in production at Netflix, managing thousands of AWS EC2\ninstances and launching hundreds of thousands of containers daily for both batch and service workloads.\n\n\nCloud-native integrations with AWS\n. Titus integrates with AWS services, such as VPC networking, IAM and Security Group\nconcepts, Application Load Balancing, and EC2 capacity management. These integrations enable many cloud\nservices to work seamlessly with containers.\n\n\nNetflix OSS integration\n. Titus works natively with many existing Netflix OSS projects, including\n\nSpinnaker\n, \nEureka\n,\n\nArchaius\n, and \nAtlas\n among others.\n\n\nDocker-native container execution\n.  Titus can run images packaged as Docker containers while providing\nadditional security and reliability around container execution.\n\n\n\n\nArchitectural Overview\n\n\nAn overview of how Titus works is provided \nhere\n.\n\n\nGetting Started\n\n\nYou can find out about building Titus \nhere\n and deploying \nhere\n.\n\n\nLearn More About Titus\n\n\n\n\nTitus: Introducing Containers to the Netflix Cloud\n\n\nThe Evolution of Container Usage at Netflix\n\n\nRunning Container at Scale at Netflix\n\n\nA Series of Unfortunate Container Events\n\n\n\n\nContributing\n\n\nRefer to \ncontibuting.md\n\n\nJoin us on \nslack\n\n\nLicense\n\n\nCopyright 2018 Netflix, Inc.\n\n\nLicensed under the Apache License, Version 2.0 (the \u201cLicense\u201d); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \u201cAS IS\u201d BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.", 
             "title": "Introduction"
         }, 
         {
@@ -27,7 +27,7 @@
         }, 
         {
             "location": "/#contributing", 
-            "text": "Refer to  contibuting.md", 
+            "text": "Refer to  contibuting.md  Join us on  slack", 
             "title": "Contributing"
         }, 
         {
@@ -304,11 +304,6 @@
             "location": "/test/batch/#debugging-mesos", 
             "text": "IPOFMESOS:5050  IPOFMESOS:5050/slaves", 
             "title": "Debugging Mesos"
-        }, 
-        {
-            "location": "/contributing/", 
-            "text": "", 
-            "title": "Contributing"
         }, 
         {
             "location": "/faq/", 

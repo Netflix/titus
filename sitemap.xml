@@ -4,7 +4,7 @@
     
     <url>
      <loc>/</loc>
-     <lastmod>2018-04-03</lastmod>
+     <lastmod>2018-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -12,7 +12,7 @@
     
     <url>
      <loc>/overview/</loc>
-     <lastmod>2018-04-03</lastmod>
+     <lastmod>2018-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -20,7 +20,7 @@
     
     <url>
      <loc>/build/</loc>
-     <lastmod>2018-04-03</lastmod>
+     <lastmod>2018-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -29,25 +29,25 @@
         
     <url>
      <loc>/install/prereqs/</loc>
-     <lastmod>2018-04-03</lastmod>
+     <lastmod>2018-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/install/prereqs-amazon/</loc>
-     <lastmod>2018-04-03</lastmod>
+     <lastmod>2018-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/install/master/</loc>
-     <lastmod>2018-04-03</lastmod>
+     <lastmod>2018-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/install/agent/</loc>
-     <lastmod>2018-04-03</lastmod>
+     <lastmod>2018-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -57,7 +57,7 @@
         
     <url>
      <loc>/test/batch/</loc>
-     <lastmod>2018-04-03</lastmod>
+     <lastmod>2018-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -65,16 +65,8 @@
 
     
     <url>
-     <loc>/contributing/</loc>
-     <lastmod>2018-04-03</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-    <url>
      <loc>/faq/</loc>
-     <lastmod>2018-04-03</lastmod>
+     <lastmod>2018-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
