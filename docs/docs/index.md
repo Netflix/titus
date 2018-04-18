@@ -35,6 +35,8 @@ You can find out about building Titus [here](build.md) and deploying [here](inst
 
 Refer to [contibuting.md](contributing.md)
 
+Join us on [slack](https://titusoss.herokuapp.com/)
+
 ### License
 
 Copyright 2018 Netflix, Inc.
