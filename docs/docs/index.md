@@ -33,7 +33,7 @@ You can find out about building Titus [here](build.md) and deploying [here](inst
 
 ### Contributing
 
-Refer to [contibuting.md](contributing.md)
+Refer to [contibuting.md](https://github.com/Netflix/titus/blob/master/CONTRIBUTING.md)
 
 Join us on [slack](https://titusoss.herokuapp.com/)
 
