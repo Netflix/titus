@@ -1,7 +1,5 @@
 # Agent
 
-## Titus-vpc-driver
-See the build instructions in the [repo](https://github.com/Netflix/titus-vpc-driver/blob/master/README.md#building).
 ## Titus-executor
 See the build instructions in the [repo](https://github.com/Netflix/titus-executor/blob/master/README.md#building).
 

@@ -120,7 +120,6 @@ Of course, adapt the configuration file to your needs. The Mesos attributes are 
 
 
 # VPC Driver
-Install the VPC Driver from the repo. The name of the package is `titus-vpc-driver`.
 * Add `net.ifnames=0` to GRUB_CMDLINE_LINUX= in `/etc/default/grub` and then run `sudo update-grub`.
 * Remove the `/etc/udev/rules.d/70-persistent-net.rules` file and then run `sudo reboot`.
 * After reboot, the default interface should be named `eth0` instead of the previous `ens3`.
