@@ -530,10 +530,11 @@ MESOS_ATTRIBUTES=region:us-east-1;asg:titusagent-devvpc7-r4.8xlarge-v072;stack:d
 <li>res: Special construction to signal to the Titus master how many ENIs this instance type can handle, for example "ResourceSet-ENIs-7-29", means that this machine can have 7 additional ENIs, and 29 IPs per ENI.</li>
 </ul>
 <h1 id="vpc-driver">VPC Driver</h1>
-<p>Install the VPC Driver from the repo. The name of the package is <code>titus-vpc-driver</code>.
-<em> Add <code>net.ifnames=0</code> to GRUB_CMDLINE_LINUX= in <code>/etc/default/grub</code> and then run <code>sudo update-grub</code>.
-</em> Remove the <code>/etc/udev/rules.d/70-persistent-net.rules</code> file and then run <code>sudo reboot</code>.
-* After reboot, the default interface should be named <code>eth0</code> instead of the previous <code>ens3</code>.</p>
+<ul>
+<li>Add <code>net.ifnames=0</code> to GRUB_CMDLINE_LINUX= in <code>/etc/default/grub</code> and then run <code>sudo update-grub</code>.</li>
+<li>Remove the <code>/etc/udev/rules.d/70-persistent-net.rules</code> file and then run <code>sudo reboot</code>.</li>
+<li>After reboot, the default interface should be named <code>eth0</code> instead of the previous <code>ens3</code>.</li>
+</ul>
 <h1 id="titus-executor">titus-executor</h1>
 <p>Install the VPC Driver from the repo. The name of the package is <code>titus-executor</code>.</p>
 <p>You need to configure it with a configuration file at <code>/etc/titus-executor/config.json</code>. The configuration file looks like below:</p>
