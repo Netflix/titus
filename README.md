@@ -2,7 +2,7 @@
 
 [Documentation](https://netflix.github.io/titus/)
 
-# Titus Source Code on Github
+# Titus Source Code on GitHub
 
 [Titus API Definition](https://github.com/Netflix/titus-api-definitions)
 
