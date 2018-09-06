@@ -30,13 +30,13 @@ For inbound
 - From titusmaster-mainvpc security group, ALL TCP, All ICMP
 - From anywhere (including Internet), SSH
 
-<img src="../../images/titusmaster-mainvpc-secgroup-inbound.png" />
+<img src="../images/titusmaster-mainvpc-secgroup-inbound.png" />
 
 For outbound
 
 - All traffic
 
-<img src="../../images/titusmaster-mainvpc-secgroup-outbound.png" />
+<img src="../images/titusmaster-mainvpc-secgroup-outbound.png" />
 
 ## App security group
 
@@ -50,27 +50,27 @@ For inbound and outbound
 
 Eventually this is how the security groups you created will be used
 
-<img src="../../images/secgroups-arch.png" />
+<img src="../images/secgroups-arch.png" />
 
 # Creating IAM Roles
 
 Three IAM roles are needed. We are naming them `titusmasterInstanceProfile' and 'titusappwiths3InstanceProfile'
 and 'titusappnos3InstanceProfile'.
 
-<img src="../../images/iamroles.png" />
+<img src="../images/iamroles.png" />
 
 ## Infrastructure IAM Role
 
 For now, we are using a wide open IAM role. We can refine this later.
 
-<img src="../../images/titusmasterinstanceprofilepolicy.png" />
+<img src="../images/titusmasterinstanceprofilepolicy.png" />
 
 ## App IAM Roles
 
 You need to allow this IAM Role to be assumed into via the Infrastructure Role. You can do this by setting
 up trusted relationships. It should look like this:
 
-<img src="../../images/titusappinstanceprofile-trust.png" />
+<img src="../images/titusappinstanceprofile-trust.png" />
 
 The Trust relationship should look like:
 
@@ -103,4 +103,4 @@ and one without to be able to test the IAM role support feature.
 
 Eventually this is how the IAM roles you created will be used
 
-<img src="../../images/iamroles-arch.jpg" />
+<img src="../images/iamroles-arch.jpg" />
