@@ -8,7 +8,7 @@ This is for advanced users only. We do not recommend using these instructions un
 
 
 ## Linux
-We recommend Ubuntu Linux, Xenial, with a 4.4 or newer version for running Titus. We also recommend this for developing Titus agent itself. We recommend using XFS or Btrfs for the storage of the Docker daemon itself, and separating out the storage of the agent "Control Plane" components versus the non-control plane components. 
+We recommend Ubuntu Linux, Xenial, with a 4.4 or newer kernel version for running Titus. We also recommend this for developing Titus agent itself. We recommend using XFS or Btrfs for the storage of the Docker daemon itself, and separating out the storage of the agent "Control Plane" components versus the non-control plane components. 
 
 ## Install Packagecloud Repo
 Run the following commands:
