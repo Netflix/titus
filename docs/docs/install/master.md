@@ -1,4 +1,7 @@
+# Titus Control Plane
+
 ## Master
+
 Run as ubuntu user
 
 * add titus apt repo with `curl -s https://8095c452e9473a3fae3ea86a6f2572c2cde0d7b5ec63e84f:@packagecloud.io/install/repositories/netflix/titus/script.deb.sh | sudo bash`
@@ -9,7 +12,8 @@ Run as ubuntu user
 * Run `sudo dpkg -i titus-server-master<version>.deb` to install the debian
 
 * Create `~/titusmaster.properties` with the properties:
-```
+
+```properties
 titus.master.apiport=7001
 titus.master.apiProxyPort=7001
 titus.master.grpcServer.port=7104
@@ -31,6 +35,7 @@ mesos.titus.executor=/apps/titus-executor/bin/titus-executor
 * Start server with `sudo /opt/titus-server-master/bin/titus-server-master -p ~/titusmaster.properties | tee ~/titusmaster.log`
 
 ## Gateway
+
 Run as ubuntu user
 
 * update apt repos with `sudo apt-get update`
@@ -40,10 +45,9 @@ Run as ubuntu user
 * Run `sudo dpkg -i titus-server-gateway<version>.deb` to install the debian
 
 * Create `~/titusgateway.properties` with the properties:
-```
-titus.gateway.masterIp=<MASTER_IP>
-titus.gateway.masterHttpPort=<MASTER_PORT>
+
+```properties
+titus.masterClient.masterIp=<MASTER_IP>
 ```
 
 * Start server with `sudo /opt/titus-server-gateway/bin/titus-server-gateway -p ~/titusgateway.properties | tee ~/titusgateway.log`
-
