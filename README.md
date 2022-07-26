@@ -1,3 +1,7 @@
+# Archival notice
+
+This repo has been archived and is no longer in active development.
+
 # Titus Documentation
 
 [Documentation](https://netflix.github.io/titus/)
